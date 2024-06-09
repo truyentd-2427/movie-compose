@@ -1,4 +1,4 @@
-package com.truyentd.moviecompose.presentation.screens.search
+package com.truyentd.moviecompose.presentation.screens.setting
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,20 +7,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.truyentd.moviecompose.presentation.screens.profile.ProfileScreen
 
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun SettingScreen(screenName: String) {
+fun FavoriteScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = screenName)
+        Text(text = "Favorite Screen")
     }
 }
 
 @Preview
 @Composable
 fun SettingScreenPreview() {
-    SettingScreen("Setting Screen")
+    FavoriteScreen()
 }

@@ -9,18 +9,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.truyentd.moviecompose.presentation.screens.home.HomeScreen
 
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun ProfileScreen(screenName: String) {
+fun ProfileScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = screenName)
+        Text(text = "Profile Screen")
     }
 }
 
 @Preview
 @Composable
 fun ProfileScreenPreview() {
-    ProfileScreen("Profile Screen")
+    ProfileScreen()
 }
