@@ -1,29 +1,27 @@
-package com.truyentd.moviecompose.presentation.navigation
+package com.truyentd.moviecompose.navigation.top
 
 import androidx.annotation.DrawableRes
 import com.truyentd.moviecompose.R
+import com.truyentd.moviecompose.navigation.AppDestination
 
-abstract class AppScreen(val route: String) {
-}
-
-sealed class BottomNavScreen(
+sealed class TopDestination(
     route: String,
     @DrawableRes val unselectedIcon: Int,
     @DrawableRes val selectedIcon: Int,
-) : AppScreen(route) {
-    object Home : BottomNavScreen(
+) : AppDestination(route) {
+    object Home : TopDestination(
         route = "home",
         unselectedIcon = R.drawable.ic_film_unselected,
         selectedIcon = R.drawable.ic_film_selected,
     )
 
-    object Setting : BottomNavScreen(
+    object Setting : TopDestination(
         route = "setting",
         unselectedIcon = R.drawable.ic_ticket_unselected,
         selectedIcon = R.drawable.ic_ticket_selected,
     )
 
-    object Favorite : BottomNavScreen(
+    object Favorite : TopDestination(
         route = "profile",
         unselectedIcon = R.drawable.ic_bookmark_unselected,
         selectedIcon = R.drawable.ic_bookmark_selected,

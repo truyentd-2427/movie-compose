@@ -1,7 +1,5 @@
 package com.truyentd.moviecompose.presentation.screens.main
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -19,41 +17,37 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.truyentd.moviecompose.presentation.navigation.BottomNavScreen
-import com.truyentd.moviecompose.presentation.screens.home.HomeScreen
-import com.truyentd.moviecompose.presentation.screens.profile.ProfileScreen
-import com.truyentd.moviecompose.presentation.screens.setting.FavoriteScreen
+import com.truyentd.moviecompose.navigation.top.TopDestination
+import com.truyentd.moviecompose.navigation.top.TopNavHost
 import com.truyentd.moviecompose.ui.theme.AppColors
 
 @Preview
 @Composable
-fun MainScreenPreview() {
-    MainScreen()
+fun TopScreenPreview() {
+    TopScreen {}
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun TopScreen(onMovieClick: () -> Unit) {
     val navController = rememberNavController()
     Scaffold(
         containerColor = AppColors.White,
         bottomBar = {
+            val bottomNavScreens = listOf(
+                TopDestination.Home,
+                TopDestination.Favorite,
+                TopDestination.Setting
+            )
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentDestination = navBackStackEntry?.destination
             BottomNavigation(
                 modifier = Modifier.navigationBarsPadding(),
                 backgroundColor = Color.White,
                 elevation = 12.dp,
             ) {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-                val bottomNavScreens = listOf(
-                    BottomNavScreen.Home,
-                    BottomNavScreen.Favorite,
-                    BottomNavScreen.Setting
-                )
                 bottomNavScreens.forEach { screen ->
                     val selected =
                         currentDestination?.hierarchy?.any { it.route == screen.route } == true
@@ -86,24 +80,12 @@ fun MainScreen() {
             }
         }
     ) { innerPadding ->
-        NavHost(
+        TopNavHost(
             navController = navController,
-            startDestination = BottomNavScreen.Home.route,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None },
-        ) {
-            composable(route = BottomNavScreen.Home.route) {
-                HomeScreen()
-            }
-            composable(route = BottomNavScreen.Favorite.route) {
-                ProfileScreen()
-            }
-            composable(route = BottomNavScreen.Setting.route) {
-                FavoriteScreen()
-            }
-        }
+            onMovieClick = onMovieClick,
+        )
     }
 }
