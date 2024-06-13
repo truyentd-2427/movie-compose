@@ -26,12 +26,12 @@ import com.truyentd.moviecompose.ui.theme.AppColors
 @Preview
 @Composable
 fun TopScreenPreview() {
-    TopScreen {}
+    TopScreen({}, {})
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopScreen(onMovieClick: () -> Unit) {
+fun TopScreen(onMovieClick: () -> Unit, onFavoriteClick: () -> Unit) {
     val navController = rememberNavController()
     Scaffold(
         containerColor = AppColors.White,
@@ -86,6 +86,7 @@ fun TopScreen(onMovieClick: () -> Unit) {
                 .fillMaxSize()
                 .padding(innerPadding),
             onMovieClick = onMovieClick,
+            onFavoriteClick = onFavoriteClick,
         )
     }
 }

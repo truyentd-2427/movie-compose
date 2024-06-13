@@ -18,9 +18,11 @@ import com.truyentd.moviecompose.presentation.screens.profile.ProfileScreen
 
 fun NavGraphBuilder.topNavGraph(navController: NavHostController) {
     composable(AppNavGraph.Top.route) {
-        TopScreen {
+        TopScreen({
             navController.navigate(MovieDestination.MovieDetail.route)
-        }
+        }, {
+            navController.navigate(MovieDestination.MovieDetail.route)
+        })
     }
 }
 
@@ -30,6 +32,7 @@ fun TopNavHost(
     navController: NavHostController,
     modifier: Modifier,
     onMovieClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
 ) {
     NavHost(
         navController = navController,
@@ -51,7 +54,9 @@ fun TopNavHost(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            FavoriteScreen()
+            FavoriteScreen {
+                onFavoriteClick.invoke()
+            }
         }
         composable(
             route = TopDestination.Setting.route, enterTransition = { EnterTransition.None },
