@@ -53,7 +53,7 @@ fun HomeScreenPreview() {
 }
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onMovieClick: (() -> Unit)? = null) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -73,7 +73,7 @@ fun HomeScreen() {
                 },
             )
             Spacer(modifier = Modifier.height(16.dp))
-            ListNowShowingMovies()
+            ListNowShowingMovies(onMovieClick = onMovieClick)
             Spacer(modifier = Modifier.height(24.dp))
             SectionTitle(
                 title = "Popular",
@@ -160,14 +160,14 @@ private fun SectionTitle(title: String, onSeeMoreClick: (() -> Unit)? = null) {
 }
 
 @Composable
-private fun ListNowShowingMovies() {
+private fun ListNowShowingMovies(onMovieClick: (() -> Unit)? = null) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(horizontal = 24.dp),
     ) {
         items(10) {
-            NowShowingMovieItem()
+            NowShowingMovieItem(onMovieClick = onMovieClick)
         }
     }
 }

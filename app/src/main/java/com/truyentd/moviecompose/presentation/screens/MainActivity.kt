@@ -6,18 +6,20 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.truyentd.moviecompose.presentation.screens.main.MainScreen
+import androidx.navigation.compose.rememberNavController
+import com.truyentd.moviecompose.navigation.AppNavHost
+import com.truyentd.moviecompose.presentation.screens.main.TopScreen
 import com.truyentd.moviecompose.ui.theme.MovieComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             MovieComposeTheme {
-                MainScreen()
+                AppNavHost(navController = rememberNavController())
             }
         }
     }
@@ -26,5 +28,7 @@ class MainActivity : ComponentActivity() {
 @Preview(showSystemUi = true)
 @Composable
 fun MainActivityPreview() {
-    MainScreen()
+    TopScreen {
+
+    }
 }
