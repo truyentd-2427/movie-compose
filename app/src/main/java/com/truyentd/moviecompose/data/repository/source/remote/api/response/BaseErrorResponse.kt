@@ -5,12 +5,12 @@ import com.google.gson.annotations.SerializedName
 
 data class BaseErrorResponse(
     @Expose
-    @SerializedName("code")
+    @SerializedName("status_code")
     val code: Int,
-    @Expose
-    @SerializedName("data")
-    val data: Any?,
-    @Expose
-    @SerializedName("message")
-    val message: String,
+//    @Expose
+//    @SerializedName("data")
+//    val data: Any?,
+//    @Expose
+//    @SerializedName("message")
+//    val message: String,
 )

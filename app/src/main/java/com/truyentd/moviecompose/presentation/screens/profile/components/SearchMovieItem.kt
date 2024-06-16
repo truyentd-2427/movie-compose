@@ -1,4 +1,4 @@
-package com.truyentd.moviecompose.presentation.screens.home.components
+package com.truyentd.moviecompose.presentation.screens.profile.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,22 +28,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.truyentd.moviecompose.R
-import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.ui.theme.AppColors
 
 @Preview(showBackground = true)
 @Composable
-fun PopularMovieItemPreview() {
-    PopularMovieItem(MovieData())
+fun SearchMovieItemPreview() {
+    SearchMovieItem()
 }
 
 @Composable
-fun PopularMovieItem(movie: MovieData, onMovieClick: ((MovieData) -> Unit)? = null) {
+fun SearchMovieItem() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .clickable { onMovieClick?.invoke(movie) }
+            .clickable {
+                // TODO invoke click
+            }
     ) {
         AsyncImage(
             modifier = Modifier
@@ -52,7 +53,7 @@ fun PopularMovieItem(movie: MovieData, onMovieClick: ((MovieData) -> Unit)? = nu
                 .clip(
                     shape = RoundedCornerShape(8.dp)
                 ),
-            model = movie.posterUrl,
+            model = "https://image.tmdb.org/t/p/original/reEMJA1uzscCbkpeRJeTT2bjqUp.jpg",
             contentDescription = null,
             contentScale = ContentScale.Crop,
         )
@@ -63,7 +64,7 @@ fun PopularMovieItem(movie: MovieData, onMovieClick: ((MovieData) -> Unit)? = nu
                 .wrapContentHeight()
         ) {
             Text(
-                text = movie.title.orEmpty(),
+                text = "Spiderman: Far From Home",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -80,7 +81,7 @@ fun PopularMovieItem(movie: MovieData, onMovieClick: ((MovieData) -> Unit)? = nu
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "${movie.voteAverage}/10 IMDB",
+                    text = "5.0/10 IMDB",
                     fontSize = 12.sp,
                     color = AppColors.DustyGray,
                 )

@@ -5,7 +5,7 @@ object ApiConfig {
     const val BEARER = "Bearer"
 
     fun baseUrl(): String {
-        return ""
+        return "https://api.themoviedb.org"
     }
 
     fun getBearerToken(idToken: String?): String {

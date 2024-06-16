@@ -19,6 +19,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.navigation.top.TopDestination
 import com.truyentd.moviecompose.navigation.top.TopNavHost
 import com.truyentd.moviecompose.ui.theme.AppColors
@@ -26,12 +27,12 @@ import com.truyentd.moviecompose.ui.theme.AppColors
 @Preview
 @Composable
 fun TopScreenPreview() {
-    TopScreen {}
+    TopScreen({}, {})
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopScreen(onMovieClick: () -> Unit) {
+fun TopScreen(onMovieClick: (MovieData) -> Unit, onFavoriteClick: () -> Unit) {
     val navController = rememberNavController()
     Scaffold(
         containerColor = AppColors.White,
@@ -86,6 +87,7 @@ fun TopScreen(onMovieClick: () -> Unit) {
                 .fillMaxSize()
                 .padding(innerPadding),
             onMovieClick = onMovieClick,
+            onFavoriteClick = onFavoriteClick,
         )
     }
 }

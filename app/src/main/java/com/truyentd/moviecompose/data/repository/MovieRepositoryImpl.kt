@@ -8,7 +8,15 @@ import javax.inject.Inject
 class MovieRepositoryImpl @Inject constructor(
     private val remoteDataSource: MovieRemoteDataSource,
 ) : MovieRepository {
-    override fun getMovies(): List<MovieData> {
-        return remoteDataSource.getMovies()
+    override suspend fun getNowPlayingMovies(): List<MovieData> {
+        return remoteDataSource.getNowPlayingMovies()
+    }
+
+    override suspend fun getPopularMovies(): List<MovieData> {
+        return remoteDataSource.getPopularMovies()
+    }
+
+    override suspend fun getMovieDetail(movieId: Int): MovieData {
+        return remoteDataSource.getMovieDetail(movieId)
     }
 }
