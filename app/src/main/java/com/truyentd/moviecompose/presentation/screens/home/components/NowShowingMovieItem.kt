@@ -13,27 +13,29 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.ui.theme.AppColors
 
 @Preview(showBackground = true)
 @Composable
 fun NowShowingMovieItemPreview() {
-    NowShowingMovieItem()
+    NowShowingMovieItem(MovieData())
 }
 
 @Composable
-fun NowShowingMovieItem(onMovieClick: (() -> Unit)? = null) {
+fun NowShowingMovieItem(movie: MovieData, onMovieClick: ((MovieData) -> Unit)? = null) {
     Column(
         modifier = Modifier
             .width(143.dp)
             .wrapContentHeight()
             .clickable {
-                onMovieClick?.invoke()
+                onMovieClick?.invoke(movie)
             }
     ) {
         Card(
@@ -46,15 +48,16 @@ fun NowShowingMovieItem(onMovieClick: (() -> Unit)? = null) {
                 modifier = Modifier
                     .width(143.dp)
                     .height(212.dp),
-                model = "https://image.tmdb.org/t/p/original/reEMJA1uzscCbkpeRJeTT2bjqUp.jpg",
-                contentDescription = "Translated description of what the image contains"
+                model = movie.posterUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
             )
         }
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "Spiderman: No way home",
+            text = movie.title.orEmpty(),
             fontSize = 14.sp,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
     }
 }

@@ -3,5 +3,9 @@ package com.truyentd.moviecompose.domain.repository
 import com.truyentd.moviecompose.data.model.MovieData
 
 interface MovieRepository {
-    fun getMovies(): List<MovieData>
+    suspend fun getNowPlayingMovies(): List<MovieData>
+
+    suspend fun getPopularMovies(): List<MovieData>
+
+    suspend fun getMovieDetail(movieId: Int): MovieData?
 }

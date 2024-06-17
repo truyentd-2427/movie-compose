@@ -18,5 +18,6 @@ object AppColors {
     val LightningYellow = Color(0xFFFFC319)
     val Fog = Color(0xFFDBE3FF)
     val Portage = Color(0xFF88A4E8)
+    val WhiteLilac = Color(0xFFF0EFFA)
 }
 

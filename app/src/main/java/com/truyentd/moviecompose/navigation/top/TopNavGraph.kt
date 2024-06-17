@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
+import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.navigation.AppNavGraph
 import com.truyentd.moviecompose.navigation.movie.MovieDestination
 import com.truyentd.moviecompose.presentation.screens.favorite.FavoriteScreen
@@ -18,9 +19,14 @@ import com.truyentd.moviecompose.presentation.screens.profile.ProfileScreen
 
 fun NavGraphBuilder.topNavGraph(navController: NavHostController) {
     composable(AppNavGraph.Top.route) {
-        TopScreen {
-            navController.navigate(MovieDestination.MovieDetail.route)
-        }
+        TopScreen(
+            onMovieClick = { movie ->
+                navController.navigate("movie-detail/${movie.id}")
+            },
+            onFavoriteClick = {
+                navController.navigate(MovieDestination.MovieDetail.route)
+            },
+        )
     }
 }
 
@@ -29,7 +35,8 @@ fun NavGraphBuilder.topNavGraph(navController: NavHostController) {
 fun TopNavHost(
     navController: NavHostController,
     modifier: Modifier,
-    onMovieClick: () -> Unit,
+    onMovieClick: (MovieData) -> Unit,
+    onFavoriteClick: () -> Unit,
 ) {
     NavHost(
         navController = navController,
@@ -41,7 +48,7 @@ fun TopNavHost(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            HomeScreen(onMovieClick)
+            HomeScreen(onMovieClick = onMovieClick)
         }
         composable(
             route = TopDestination.Favorite.route,
@@ -51,7 +58,9 @@ fun TopNavHost(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            FavoriteScreen()
+            FavoriteScreen {
+                onFavoriteClick.invoke()
+            }
         }
         composable(
             route = TopDestination.Setting.route, enterTransition = { EnterTransition.None },

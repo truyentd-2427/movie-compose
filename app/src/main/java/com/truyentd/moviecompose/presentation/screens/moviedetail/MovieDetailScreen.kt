@@ -28,6 +28,7 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,8 +41,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.truyentd.moviecompose.R
+import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.presentation.screens.home.components.CategoryTag
 import com.truyentd.moviecompose.presentation.screens.moviedetail.components.CastItem
 import com.truyentd.moviecompose.ui.theme.AppColors
@@ -53,7 +57,9 @@ fun MovieDetailScreenPreview() {
 }
 
 @Composable
-fun MovieDetailScreen() {
+fun MovieDetailScreen(viewModel: MovieDetailViewModel = hiltViewModel()) {
+    val movie: MovieData? by viewModel.movieDetail.collectAsStateWithLifecycle()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -65,8 +71,8 @@ fun MovieDetailScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp),
-            model = "https://image.tmdb.org/t/p/original/reEMJA1uzscCbkpeRJeTT2bjqUp.jpg",
-            contentDescription = "Translated description of what the image contains",
+            model = movie?.backdropUrl,
+            contentDescription = null,
             contentScale = ContentScale.Crop,
         )
         Column(
@@ -86,7 +92,7 @@ fun MovieDetailScreen() {
             ) {
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = "Spiderman: No way home",
+                    text = movie?.title.orEmpty(),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -111,7 +117,7 @@ fun MovieDetailScreen() {
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "6.4/10 IMDB",
+                    text = "${movie?.voteAverage ?: 0}/10 IMDB",
                     fontSize = 12.sp,
                     color = AppColors.DustyGray,
                 )
@@ -208,7 +214,7 @@ fun MovieDetailScreen() {
                     .padding(horizontal = 24.dp)
                     .fillMaxWidth()
                     .wrapContentHeight(),
-                text = "With Spider-Man's identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear, forcing Peter to discover what it truly means to be Spider-Man.",
+                text = movie?.overview.orEmpty(),
                 fontSize = 14.sp,
                 color = AppColors.DustyGray,
             )
