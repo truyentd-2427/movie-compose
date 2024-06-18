@@ -1,4 +1,4 @@
-package com.truyentd.moviecompose.presentation.screens.profile
+package com.truyentd.moviecompose.presentation.screens.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,17 +33,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.truyentd.moviecompose.presentation.screens.profile.components.SearchMovieItem
+import com.truyentd.moviecompose.presentation.screens.search.components.SearchMovieItem
 import com.truyentd.moviecompose.ui.theme.AppColors
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ProfileScreenPreview() {
-    ProfileScreen()
+    SearchScreen()
 }
 
 @Composable
-fun ProfileScreen() {
+fun SearchScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,7 +78,6 @@ fun ProfileScreen() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TopHeader() {
     var queryText by remember { mutableStateOf(TextFieldValue("")) }

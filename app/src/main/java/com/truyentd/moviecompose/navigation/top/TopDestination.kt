@@ -15,14 +15,14 @@ sealed class TopDestination(
         selectedIcon = R.drawable.ic_film_selected,
     )
 
-    object Setting : TopDestination(
-        route = "setting",
+    object Search : TopDestination(
+        route = "search",
         unselectedIcon = R.drawable.ic_ticket_unselected,
         selectedIcon = R.drawable.ic_ticket_selected,
     )
 
     object Favorite : TopDestination(
-        route = "profile",
+        route = "favorite",
         unselectedIcon = R.drawable.ic_bookmark_unselected,
         selectedIcon = R.drawable.ic_bookmark_selected,
     )

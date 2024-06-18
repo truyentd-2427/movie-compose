@@ -1,12 +1,7 @@
 package com.truyentd.moviecompose.presentation.screens.home
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -20,19 +15,15 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +33,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.truyentd.moviecompose.R
 import com.truyentd.moviecompose.data.model.MovieData
+import com.truyentd.moviecompose.presentation.components.LoadingBox
+import com.truyentd.moviecompose.presentation.components.SectionTitle
 import com.truyentd.moviecompose.presentation.screens.home.components.NowShowingMovieItem
 import com.truyentd.moviecompose.presentation.screens.home.components.PopularMovieItem
 import com.truyentd.moviecompose.ui.theme.AppColors
@@ -57,9 +50,18 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onMovieClick: ((MovieData) -> Unit)? = null
 ) {
-    val nowPlayingMovies: List<MovieData> by viewModel.nowShowingMovies.collectAsStateWithLifecycle()
-    val popularMovies: List<MovieData> by viewModel.popularMovies.collectAsStateWithLifecycle()
+    val uiState: HomeUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isLoading: Boolean by viewModel.isLoading.collectAsStateWithLifecycle()
 
+    HomeScreenContent(uiState = uiState, isLoading = isLoading, onMovieClick = onMovieClick)
+}
+
+@Composable
+private fun HomeScreenContent(
+    uiState: HomeUiState,
+    isLoading: Boolean,
+    onMovieClick: ((MovieData) -> Unit)? = null
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -67,30 +69,35 @@ fun HomeScreen(
             .background(AppColors.White)
     ) {
         TopHeader()
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+        LoadingBox(
+            isLoading = isLoading,
+            modifier = Modifier.fillMaxSize()
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
-            SectionTitle(
-                title = "Now Showing",
-                onSeeMoreClick = {
-                    Log.d("HomeScreen", "NowShowing onSeeMoreClick")
-                },
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            ListNowShowingMovies(nowPlayingMovies, onMovieClick = onMovieClick)
-            Spacer(modifier = Modifier.height(24.dp))
-            SectionTitle(
-                title = "Popular",
-                onSeeMoreClick = {
-                    Log.d("HomeScreen", "Popular onSeeMoreClick")
-                },
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            LisPopularMovies(popularMovies, onMovieClick = onMovieClick)
-            Spacer(modifier = Modifier.height(24.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Spacer(modifier = Modifier.height(8.dp))
+                SectionTitle(
+                    title = stringResource(id = R.string.now_showing),
+                    onSeeMoreClick = {
+                        // TODO Go to see more screen
+                    },
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                ListNowShowingMovies(uiState.nowPlayingMovies, onMovieClick = onMovieClick)
+                Spacer(modifier = Modifier.height(24.dp))
+                SectionTitle(
+                    title = stringResource(id = R.string.popular),
+                    onSeeMoreClick = {
+                        // TODO Go to see more screen
+                    },
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                LisPopularMovies(uiState.popularMovies, onMovieClick = onMovieClick)
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }
@@ -112,7 +119,7 @@ private fun TopHeader() {
             contentDescription = null,
         )
         Text(
-            text = "MovieCompose",
+            text = stringResource(id = R.string.app_name),
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center,
             fontSize = 16.sp,
@@ -124,50 +131,10 @@ private fun TopHeader() {
 }
 
 @Composable
-private fun SectionTitle(title: String, onSeeMoreClick: (() -> Unit)? = null) {
-    Row(
-        modifier = Modifier
-            .padding(horizontal = 24.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = title,
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            color = AppColors.Violet
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Box(
-            modifier = Modifier
-                .border(
-                    width = 1.dp,
-                    shape = RoundedCornerShape(16.dp),
-                    color = Color(0xFFE5E4EA)
-                )
-                .clip(RoundedCornerShape(16.dp))
-                .clickable(
-                    onClick = {
-                        onSeeMoreClick?.invoke()
-                    },
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = rememberRipple(bounded = true),
-                )
-        ) {
-            Text(
-                modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
-                text = "See more",
-                textAlign = TextAlign.Center,
-                fontSize = 10.sp,
-                color = Color(0xFFAAA9B1)
-            )
-        }
-    }
-}
-
-@Composable
-private fun ListNowShowingMovies(movies: List<MovieData>, onMovieClick: ((MovieData) -> Unit)? = null) {
+private fun ListNowShowingMovies(
+    movies: List<MovieData>,
+    onMovieClick: ((MovieData) -> Unit)? = null
+) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp),

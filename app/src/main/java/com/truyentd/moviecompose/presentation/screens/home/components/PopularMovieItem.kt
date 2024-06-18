@@ -1,14 +1,14 @@
 package com.truyentd.moviecompose.presentation.screens.home.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.truyentd.moviecompose.R
 import com.truyentd.moviecompose.data.model.MovieData
+import com.truyentd.moviecompose.presentation.screens.search.components.CategoryTag
 import com.truyentd.moviecompose.ui.theme.AppColors
 
 @Preview(showBackground = true)
@@ -37,6 +38,7 @@ fun PopularMovieItemPreview() {
     PopularMovieItem(MovieData())
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PopularMovieItem(movie: MovieData, onMovieClick: ((MovieData) -> Unit)? = null) {
     Row(
@@ -86,15 +88,14 @@ fun PopularMovieItem(movie: MovieData, onMovieClick: ((MovieData) -> Unit)? = nu
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Row(
+            FlowRow(
                 modifier = Modifier.wrapContentSize(),
-                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                CategoryTag("Action")
-                Spacer(modifier = Modifier.width(4.dp))
-                CategoryTag("Fiction")
-                Spacer(modifier = Modifier.width(4.dp))
-                CategoryTag("Fantasy")
+                repeat(movie.genres.orEmpty().size) { index ->
+                    CategoryTag(category = movie.genres?.getOrNull(index)?.name.orEmpty())
+                }
             }
             Spacer(modifier = Modifier.height(8.dp))
             Row(
@@ -108,26 +109,10 @@ fun PopularMovieItem(movie: MovieData, onMovieClick: ((MovieData) -> Unit)? = nu
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "1h 47m",
+                    text = movie.lengthFormatted,
                     fontSize = 12.sp,
                 )
             }
         }
-    }
-}
-
-@Composable
-fun CategoryTag(category: String) {
-    Box(
-        modifier = Modifier
-            .wrapContentSize()
-            .background(color = AppColors.Fog, shape = RoundedCornerShape(12.dp))
-            .padding(vertical = 4.dp, horizontal = 12.dp)
-    ) {
-        Text(
-            text = category,
-            fontSize = 10.sp,
-            color = AppColors.Portage
-        )
     }
 }

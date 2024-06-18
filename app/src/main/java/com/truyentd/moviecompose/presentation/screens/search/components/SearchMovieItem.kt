@@ -1,4 +1,4 @@
-package com.truyentd.moviecompose.presentation.screens.profile.components
+package com.truyentd.moviecompose.presentation.screens.search.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

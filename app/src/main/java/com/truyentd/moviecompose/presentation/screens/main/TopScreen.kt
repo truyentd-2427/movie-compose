@@ -39,8 +39,8 @@ fun TopScreen(onMovieClick: (MovieData) -> Unit, onFavoriteClick: () -> Unit) {
         bottomBar = {
             val bottomNavScreens = listOf(
                 TopDestination.Home,
+                TopDestination.Search,
                 TopDestination.Favorite,
-                TopDestination.Setting
             )
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination

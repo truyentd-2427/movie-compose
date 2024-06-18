@@ -15,10 +15,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.truyentd.moviecompose.data.model.CastData
 import com.truyentd.moviecompose.ui.theme.AppColors
 
 @Composable
-fun CastItem(onCastClick: (() -> Unit)? = null) {
+fun CastItem(cast: CastData, onCastClick: (() -> Unit)? = null) {
     Column(
         modifier = Modifier
             .width(72.dp)
@@ -32,15 +33,16 @@ fun CastItem(onCastClick: (() -> Unit)? = null) {
                 .width(72.dp)
                 .height(72.dp)
                 .clip(shape = RoundedCornerShape(8.dp)),
-            model = "https://vlabinnovation.com/wp-content/uploads/sites/21/ezgif.com-gif-maker-1.png",
-            contentDescription = "Translated description of what the image contains",
+            model = cast.profileImageUrl,
+            contentDescription = null,
             contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Tom Holland",
+            text = cast.name.orEmpty(),
             fontSize = 12.sp,
-            color = AppColors.Violet
+            color = AppColors.Violet,
+            lineHeight = 18.sp,
         )
     }
 }

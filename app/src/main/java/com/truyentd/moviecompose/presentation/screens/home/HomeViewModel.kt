@@ -1,51 +1,61 @@
 package com.truyentd.moviecompose.presentation.screens.home
 
-import androidx.lifecycle.viewModelScope
-import com.truyentd.moviecompose.data.model.MovieData
-import com.truyentd.moviecompose.domain.repository.MovieRepository
+import com.truyentd.moviecompose.data.model.GenreData
+import com.truyentd.moviecompose.domain.usecase.movie.GetMovieGenresUseCase
+import com.truyentd.moviecompose.domain.usecase.movie.GetNowPlayingMoviesUseCase
+import com.truyentd.moviecompose.domain.usecase.movie.GetPopularMoviesUseCase
 import com.truyentd.moviecompose.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val movieRepository: MovieRepository,
+    private val getMovieGenresUseCase: GetMovieGenresUseCase,
+    private val getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase,
+    private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
 ) : BaseViewModel() {
-    private val _nowShowingMovies = MutableStateFlow<List<MovieData>>(emptyList())
-    val nowShowingMovies = _nowShowingMovies.asStateFlow()
 
-    private val _popularMovies = MutableStateFlow<List<MovieData>>(emptyList())
-    val popularMovies = _popularMovies.asStateFlow()
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState = _uiState.asStateFlow()
 
     init {
-        getNowShowingMovies()
-        getPopularMovies()
+        getMovieGenres()
     }
 
-    private fun getNowShowingMovies() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val movies = movieRepository.getNowPlayingMovies().take(10)
-                _nowShowingMovies.update { movies }
-            } catch (throwable: Throwable) {
-                // No-op
+    private fun getMovieGenres() {
+        launchUseCase(getMovieGenresUseCase) { genres ->
+            getNowShowingMovies(genres)
+            getPopularMovies(genres)
+        }
+    }
+
+    private fun getNowShowingMovies(genres: List<GenreData>) {
+        launchUseCase(getNowPlayingMoviesUseCase) { movies ->
+            _uiState.update { uiState ->
+                val moviesWithGenres = movies.map { movie ->
+                    val movieGenres = genres.filter { genre ->
+                        movie.genreIds.orEmpty().any { it == genre.id }
+                    }
+                    movie.copy(genres = movieGenres)
+                }
+                uiState.copy(nowPlayingMovies = moviesWithGenres)
             }
         }
     }
 
-    private fun getPopularMovies() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val movies = movieRepository.getPopularMovies().take(10)
-                _popularMovies.update { movies }
-            } catch (throwable: Throwable) {
-                // No-op
+    private fun getPopularMovies(genres: List<GenreData>) {
+        launchUseCase(getPopularMoviesUseCase) { movies ->
+            val moviesWithGenres = movies.map { movie ->
+                val movieGenres = genres.filter { genre ->
+                    movie.genreIds.orEmpty().any { it == genre.id }
+                }
+                movie.copy(genres = movieGenres)
             }
+            _uiState.update { it.copy(popularMovies = moviesWithGenres.take(10)) }
         }
     }
 }

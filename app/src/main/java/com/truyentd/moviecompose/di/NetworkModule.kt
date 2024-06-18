@@ -2,8 +2,8 @@ package com.truyentd.moviecompose.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.truyentd.moviecompose.data.repository.source.AuthApi
-import com.truyentd.moviecompose.data.repository.source.NoneAuthApi
+import com.truyentd.moviecompose.data.repository.source.remote.api.AuthApi
+import com.truyentd.moviecompose.data.repository.source.remote.api.NoneAuthApi
 import com.truyentd.moviecompose.data.repository.source.remote.api.helper.ApiConfig
 import com.truyentd.moviecompose.data.repository.source.remote.api.helper.ServiceGenerator
 import com.truyentd.moviecompose.data.repository.source.remote.api.middleware.AuthInterceptor

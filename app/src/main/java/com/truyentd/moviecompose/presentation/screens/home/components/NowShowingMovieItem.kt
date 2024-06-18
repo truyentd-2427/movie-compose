@@ -29,7 +29,10 @@ fun NowShowingMovieItemPreview() {
 }
 
 @Composable
-fun NowShowingMovieItem(movie: MovieData, onMovieClick: ((MovieData) -> Unit)? = null) {
+fun NowShowingMovieItem(
+    movie: MovieData,
+    onMovieClick: ((MovieData) -> Unit)? = null,
+) {
     Column(
         modifier = Modifier
             .width(143.dp)
