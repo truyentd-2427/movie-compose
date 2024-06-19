@@ -15,7 +15,7 @@ import com.truyentd.moviecompose.navigation.movie.MovieDestination
 import com.truyentd.moviecompose.presentation.screens.favorite.FavoriteScreen
 import com.truyentd.moviecompose.presentation.screens.home.HomeScreen
 import com.truyentd.moviecompose.presentation.screens.main.TopScreen
-import com.truyentd.moviecompose.presentation.screens.profile.ProfileScreen
+import com.truyentd.moviecompose.presentation.screens.search.SearchScreen
 
 fun NavGraphBuilder.topNavGraph(navController: NavHostController) {
     composable(AppNavGraph.Top.route) {
@@ -51,6 +51,13 @@ fun TopNavHost(
             HomeScreen(onMovieClick = onMovieClick)
         }
         composable(
+            route = TopDestination.Search.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+        ) {
+            SearchScreen()
+        }
+        composable(
             route = TopDestination.Favorite.route,
             deepLinks = listOf(navDeepLink {
                 uriPattern = "https://moviecompose.com/favorite"
@@ -61,12 +68,6 @@ fun TopNavHost(
             FavoriteScreen {
                 onFavoriteClick.invoke()
             }
-        }
-        composable(
-            route = TopDestination.Setting.route, enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None },
-        ) {
-            ProfileScreen()
         }
     }
 }

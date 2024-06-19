@@ -1,7 +1,7 @@
 package com.truyentd.moviecompose.data.repository.source.remote.api.helper
 
-import com.truyentd.moviecompose.data.repository.source.AuthApi
-import com.truyentd.moviecompose.data.repository.source.NoneAuthApi
+import com.truyentd.moviecompose.data.repository.source.remote.api.AuthApi
+import com.truyentd.moviecompose.data.repository.source.remote.api.NoneAuthApi
 import com.truyentd.moviecompose.data.repository.source.remote.error.ApiErrorMapper
 
 inline fun <R> AuthApi.execute(block: AuthApi.() -> R): R {

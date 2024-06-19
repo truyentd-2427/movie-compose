@@ -1,5 +1,7 @@
 package com.truyentd.moviecompose.data.repository
 
+import com.truyentd.moviecompose.data.model.CastData
+import com.truyentd.moviecompose.data.model.GenreData
 import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.data.repository.source.remote.MovieRemoteDataSource
 import com.truyentd.moviecompose.domain.repository.MovieRepository
@@ -18,5 +20,13 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun getMovieDetail(movieId: Int): MovieData {
         return remoteDataSource.getMovieDetail(movieId)
+    }
+
+    override suspend fun getMovieGenre(): List<GenreData> {
+        return remoteDataSource.getMovieGenres()
+    }
+
+    override suspend fun getMovieCredits(movieId: Int): List<CastData> {
+        return remoteDataSource.getMovieCredits(movieId)
     }
 }

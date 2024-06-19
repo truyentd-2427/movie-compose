@@ -19,5 +19,6 @@ object AppColors {
     val Fog = Color(0xFFDBE3FF)
     val Portage = Color(0xFF88A4E8)
     val WhiteLilac = Color(0xFFF0EFFA)
+    val Mischka = Color(0xFFE5E4EA)
 }
 

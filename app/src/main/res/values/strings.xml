@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">MovieCompose</string>
+    <string name="now_showing">Now showing</string>
+    <string name="popular">Popular</string>
+    <string name="see_more">See more</string>
+    <string name="language">Language</string>
+    <string name="length">Length</string>
+    <string name="rating">Rating</string>
+    <string name="cast">Cast</string>
+    <string name="description">Description</string>
+    <string name="imdb_rating">%s/10 IMDB</string>
+    <string name="movie_length">%dh %dh</string>
 </resources>
