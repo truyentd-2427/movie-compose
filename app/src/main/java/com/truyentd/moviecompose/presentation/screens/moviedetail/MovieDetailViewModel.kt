@@ -21,7 +21,6 @@ class MovieDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MovieDetailUiState())
     val uiState = _uiState.asStateFlow()
 
-
     init {
         getMovieDetail()
         getMovieCredits()

@@ -33,6 +33,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.truyentd.moviecompose.R
 import com.truyentd.moviecompose.data.model.MovieData
+import com.truyentd.moviecompose.navigation.BaseDestination
+import com.truyentd.moviecompose.navigation.movie.MovieDestination
 import com.truyentd.moviecompose.presentation.components.LoadingBox
 import com.truyentd.moviecompose.presentation.components.SectionTitle
 import com.truyentd.moviecompose.presentation.screens.home.components.NowShowingMovieItem
@@ -48,19 +50,19 @@ fun HomeScreenPreview() {
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    onMovieClick: ((MovieData) -> Unit)? = null
+    navigator: ((BaseDestination) -> Unit)? = null
 ) {
     val uiState: HomeUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isLoading: Boolean by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    HomeScreenContent(uiState = uiState, isLoading = isLoading, onMovieClick = onMovieClick)
+    HomeScreenContent(uiState = uiState, isLoading = isLoading, navigator = navigator)
 }
 
 @Composable
 private fun HomeScreenContent(
     uiState: HomeUiState,
     isLoading: Boolean,
-    onMovieClick: ((MovieData) -> Unit)? = null
+    navigator: ((BaseDestination) -> Unit)? = null
 ) {
     Column(
         modifier = Modifier
@@ -86,7 +88,12 @@ private fun HomeScreenContent(
                     },
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                ListNowShowingMovies(uiState.nowPlayingMovies, onMovieClick = onMovieClick)
+                ListNowShowingMovies(
+                    movies = uiState.nowPlayingMovies,
+                    onMovieClick = {
+                        navigator?.invoke(MovieDestination.MovieDetail.createRoute(it.id.toString()))
+                    },
+                )
                 Spacer(modifier = Modifier.height(24.dp))
                 SectionTitle(
                     title = stringResource(id = R.string.popular),
@@ -95,7 +102,12 @@ private fun HomeScreenContent(
                     },
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                LisPopularMovies(uiState.popularMovies, onMovieClick = onMovieClick)
+                LisPopularMovies(
+                    movies = uiState.popularMovies,
+                    onMovieClick = {
+                        navigator?.invoke(MovieDestination.MovieDetail.createRoute(it.id.toString()))
+                    },
+                )
                 Spacer(modifier = Modifier.height(24.dp))
             }
         }
