@@ -2,13 +2,13 @@ package com.truyentd.moviecompose.navigation.top
 
 import androidx.annotation.DrawableRes
 import com.truyentd.moviecompose.R
-import com.truyentd.moviecompose.navigation.AppDestination
+import com.truyentd.moviecompose.navigation.BaseDestination
 
 sealed class TopDestination(
     route: String,
     @DrawableRes val unselectedIcon: Int,
     @DrawableRes val selectedIcon: Int,
-) : AppDestination(route) {
+) : BaseDestination(route) {
     object Home : TopDestination(
         route = "home",
         unselectedIcon = R.drawable.ic_film_unselected,

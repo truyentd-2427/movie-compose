@@ -8,35 +8,30 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navDeepLink
-import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.navigation.AppNavGraph
-import com.truyentd.moviecompose.navigation.movie.MovieDestination
+import com.truyentd.moviecompose.navigation.BaseDestination
+import com.truyentd.moviecompose.navigation.composable
+import com.truyentd.moviecompose.navigation.navigate
 import com.truyentd.moviecompose.presentation.screens.favorite.FavoriteScreen
 import com.truyentd.moviecompose.presentation.screens.home.HomeScreen
 import com.truyentd.moviecompose.presentation.screens.main.TopScreen
 import com.truyentd.moviecompose.presentation.screens.search.SearchScreen
 
 fun NavGraphBuilder.topNavGraph(navController: NavHostController) {
-    composable(AppNavGraph.Top.route) {
+    composable(route = AppNavGraph.Top.route) {
         TopScreen(
-            onMovieClick = { movie ->
-                navController.navigate("movie-detail/${movie.id}")
-            },
-            onFavoriteClick = {
-                navController.navigate(MovieDestination.MovieDetail.route)
+            navigator = { destination ->
+                navController.navigate(destination)
             },
         )
     }
 }
 
-
 @Composable
 fun TopNavHost(
     navController: NavHostController,
     modifier: Modifier,
-    onMovieClick: (MovieData) -> Unit,
-    onFavoriteClick: () -> Unit,
+    navigator: ((BaseDestination) -> Unit)? = null,
 ) {
     NavHost(
         navController = navController,
@@ -44,30 +39,25 @@ fun TopNavHost(
         startDestination = TopDestination.Home.route
     ) {
         composable(
-            route = TopDestination.Home.route,
+            destination = TopDestination.Home,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            HomeScreen(onMovieClick = onMovieClick)
+            HomeScreen(navigator = navigator)
         }
         composable(
-            route = TopDestination.Search.route,
+            destination = TopDestination.Search,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
             SearchScreen()
         }
         composable(
-            route = TopDestination.Favorite.route,
-            deepLinks = listOf(navDeepLink {
-                uriPattern = "https://moviecompose.com/favorite"
-            }),
+            destination = TopDestination.Favorite,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            FavoriteScreen {
-                onFavoriteClick.invoke()
-            }
+            FavoriteScreen()
         }
     }
 }

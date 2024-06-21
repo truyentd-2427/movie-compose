@@ -1,6 +1,5 @@
 package com.truyentd.moviecompose.presentation.screens.favorite
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,15 +20,15 @@ fun SettingScreenPreview() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoriteScreen(onFavoriteClick: (() -> Unit)? = null) {
+fun FavoriteScreen() {
     Scaffold(containerColor = AppColors.White) { innerPadding ->
         Box(
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Favorite Screen", modifier = Modifier.clickable {
-                onFavoriteClick?.invoke()
-            })
+            Text(text = "Favorite Screen")
         }
     }
 }
