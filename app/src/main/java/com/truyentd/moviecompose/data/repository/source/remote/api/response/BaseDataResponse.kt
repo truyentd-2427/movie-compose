@@ -10,6 +10,7 @@ data class BaseListResponse<T>(
     @Expose
     @SerializedName("page")
     var page: Int? = null,
+    @Expose
     @SerializedName("total_pages")
     var totalPages: Int? = null,
 )

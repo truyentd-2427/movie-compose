@@ -8,7 +8,6 @@ import com.truyentd.moviecompose.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -36,13 +35,13 @@ class HomeViewModel @Inject constructor(
     private fun getNowShowingMovies(genres: List<GenreData>) {
         launchUseCase(getNowPlayingMoviesUseCase) { movies ->
             _uiState.update { uiState ->
-                val moviesWithGenres = movies.map { movie ->
+                val fullInfoMovies = movies.map { movie ->
                     val movieGenres = genres.filter { genre ->
                         movie.genreIds.orEmpty().any { it == genre.id }
                     }
                     movie.copy(genres = movieGenres)
                 }
-                uiState.copy(nowPlayingMovies = moviesWithGenres)
+                uiState.copy(nowPlayingMovies = fullInfoMovies)
             }
         }
     }

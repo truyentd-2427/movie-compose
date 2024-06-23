@@ -6,6 +6,7 @@ import com.truyentd.moviecompose.data.repository.source.remote.api.response.Genr
 import com.truyentd.moviecompose.data.repository.source.remote.api.response.MovieCreditsResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface AuthApi {
     @GET("/3/movie/now_playing")
@@ -22,4 +23,10 @@ interface AuthApi {
 
     @GET("/3/movie/{movie_id}/credits")
     suspend fun getMovieCredits(@Path("movie_id") movieId: Int): MovieCreditsResponse
+
+    @GET("/3/search/movie")
+    suspend fun searchMovies(
+        @Query("query") keyword: String,
+        @Query("page") page: Int,
+    ): BaseListResponse<MovieData>
 }

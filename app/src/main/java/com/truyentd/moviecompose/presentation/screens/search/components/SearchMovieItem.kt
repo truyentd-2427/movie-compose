@@ -28,16 +28,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.truyentd.moviecompose.R
+import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.ui.theme.AppColors
 
 @Preview(showBackground = true)
 @Composable
 fun SearchMovieItemPreview() {
-    SearchMovieItem()
+    SearchMovieItem(MovieData())
 }
 
 @Composable
-fun SearchMovieItem() {
+fun SearchMovieItem(movie: MovieData?) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,7 +54,7 @@ fun SearchMovieItem() {
                 .clip(
                     shape = RoundedCornerShape(8.dp)
                 ),
-            model = "https://image.tmdb.org/t/p/original/reEMJA1uzscCbkpeRJeTT2bjqUp.jpg",
+            model = movie?.posterUrl.orEmpty(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
         )
@@ -64,7 +65,7 @@ fun SearchMovieItem() {
                 .wrapContentHeight()
         ) {
             Text(
-                text = "Spiderman: Far From Home",
+                text = movie?.title.orEmpty(),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -81,7 +82,7 @@ fun SearchMovieItem() {
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "5.0/10 IMDB",
+                    text = movie?.ratingFormatted.orEmpty(),
                     fontSize = 12.sp,
                     color = AppColors.DustyGray,
                 )
@@ -109,7 +110,7 @@ fun SearchMovieItem() {
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "1h 47m",
+                    text = movie?.lengthFormatted.orEmpty(),
                     fontSize = 12.sp,
                 )
             }

@@ -1,10 +1,12 @@
 package com.truyentd.moviecompose.data.repository
 
+import androidx.paging.PagingData
 import com.truyentd.moviecompose.data.model.CastData
 import com.truyentd.moviecompose.data.model.GenreData
 import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.data.repository.source.remote.MovieRemoteDataSource
 import com.truyentd.moviecompose.domain.repository.MovieRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
@@ -28,5 +30,9 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun getMovieCredits(movieId: Int): List<CastData> {
         return remoteDataSource.getMovieCredits(movieId)
+    }
+
+    override fun searchMovies(keyword: String): Flow<PagingData<MovieData>> {
+        return remoteDataSource.searchMovies(keyword)
     }
 }

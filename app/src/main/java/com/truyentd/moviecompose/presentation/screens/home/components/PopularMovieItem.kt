@@ -82,7 +82,7 @@ fun PopularMovieItem(movie: MovieData, onMovieClick: ((MovieData) -> Unit)? = nu
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "${movie.voteAverage}/10 IMDB",
+                    text = movie.ratingFormatted,
                     fontSize = 12.sp,
                     color = AppColors.DustyGray,
                 )
@@ -98,21 +98,6 @@ fun PopularMovieItem(movie: MovieData, onMovieClick: ((MovieData) -> Unit)? = nu
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.wrapContentSize(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_clock),
-                    modifier = Modifier.size(12.dp),
-                    contentDescription = null,
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = movie.lengthFormatted,
-                    fontSize = 12.sp,
-                )
-            }
         }
     }
 }
