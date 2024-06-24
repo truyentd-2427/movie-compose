@@ -5,7 +5,7 @@ import com.truyentd.moviecompose.domain.interactor.output.OutputObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/** Input use case */
+/** Has input use case */
 
 abstract class BaseAsyncUseCase<Input : BaseInput, Output> {
     open val dispatchersProvider = Dispatchers.IO
