@@ -38,13 +38,16 @@ fun SearchMovieItemPreview() {
 }
 
 @Composable
-fun SearchMovieItem(movie: MovieData?) {
+fun SearchMovieItem(
+    movie: MovieData?,
+    onMovieClick: ((MovieData) -> Unit)? = null,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable {
-                // TODO invoke click
+                movie?.let { onMovieClick?.invoke(it) }
             }
     ) {
         AsyncImage(

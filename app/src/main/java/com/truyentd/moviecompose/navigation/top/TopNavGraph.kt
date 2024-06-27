@@ -12,7 +12,7 @@ import com.truyentd.moviecompose.navigation.AppNavGraph
 import com.truyentd.moviecompose.navigation.BaseDestination
 import com.truyentd.moviecompose.navigation.composable
 import com.truyentd.moviecompose.navigation.navigate
-import com.truyentd.moviecompose.presentation.screens.favorite.FavoriteScreen
+import com.truyentd.moviecompose.presentation.screens.bookmark.BookmarkScreen
 import com.truyentd.moviecompose.presentation.screens.home.HomeScreen
 import com.truyentd.moviecompose.presentation.screens.main.TopScreen
 import com.truyentd.moviecompose.presentation.screens.search.SearchScreen
@@ -57,7 +57,7 @@ fun TopNavHost(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            FavoriteScreen()
+            BookmarkScreen()
         }
     }
 }

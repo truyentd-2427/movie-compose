@@ -14,7 +14,7 @@ class SearchMoviesUseCase @Inject constructor(
 
     data class Input(val keyword: String) : BaseInput()
 
-    override suspend fun buildUseCase(input: Input): Flow<PagingData<MovieData>> {
+    override fun buildUseCase(input: Input): Flow<PagingData<MovieData>> {
         return movieRepository.searchMovies(input.keyword)
     }
 }
