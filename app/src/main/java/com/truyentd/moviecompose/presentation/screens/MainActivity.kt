@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
 import com.truyentd.moviecompose.navigation.AppNavHost
-import com.truyentd.moviecompose.ui.theme.MovieComposeTheme
+import com.truyentd.moviecompose.presentation.theme.MovieComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

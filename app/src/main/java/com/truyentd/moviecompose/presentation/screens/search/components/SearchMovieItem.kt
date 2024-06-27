@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.truyentd.moviecompose.R
 import com.truyentd.moviecompose.data.model.MovieData
-import com.truyentd.moviecompose.ui.theme.AppColors
+import com.truyentd.moviecompose.presentation.theme.AppColors
 
 @Preview(showBackground = true)
 @Composable
@@ -38,13 +38,16 @@ fun SearchMovieItemPreview() {
 }
 
 @Composable
-fun SearchMovieItem(movie: MovieData?) {
+fun SearchMovieItem(
+    movie: MovieData?,
+    onMovieClick: ((MovieData) -> Unit)? = null,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable {
-                // TODO invoke click
+                movie?.let { onMovieClick?.invoke(it) }
             }
     ) {
         AsyncImage(

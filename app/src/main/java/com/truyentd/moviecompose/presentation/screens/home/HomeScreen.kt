@@ -39,7 +39,7 @@ import com.truyentd.moviecompose.presentation.components.LoadingBox
 import com.truyentd.moviecompose.presentation.components.SectionTitle
 import com.truyentd.moviecompose.presentation.screens.home.components.NowShowingMovieItem
 import com.truyentd.moviecompose.presentation.screens.home.components.PopularMovieItem
-import com.truyentd.moviecompose.ui.theme.AppColors
+import com.truyentd.moviecompose.presentation.theme.AppColors
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

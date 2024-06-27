@@ -2,6 +2,7 @@ package com.truyentd.moviecompose.presentation.screens.search
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.truyentd.moviecompose.domain.usecase.movie.SearchMoviesUseCase
 import com.truyentd.moviecompose.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,7 +33,9 @@ class SearchViewModel @Inject constructor(
             } else {
                 searchMoviesUseCase(SearchMoviesUseCase.Input(keyword = it))
             }
-        }.stateIn(
+        }
+        .cachedIn(scope)
+        .stateIn(
             scope = scope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = PagingData.empty(),

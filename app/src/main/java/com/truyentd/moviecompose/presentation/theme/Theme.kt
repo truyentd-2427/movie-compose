@@ -1,4 +1,4 @@
-package com.truyentd.moviecompose.ui.theme
+package com.truyentd.moviecompose.presentation.theme
 
 import android.app.Activity
 import android.os.Build

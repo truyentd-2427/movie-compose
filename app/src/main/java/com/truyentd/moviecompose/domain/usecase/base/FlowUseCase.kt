@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.flowOn
 abstract class FlowUseCase<Input : BaseInput, Output> {
     open val dispatchersProvider = Dispatchers.IO
 
-    abstract suspend fun buildUseCase(input: Input): Flow<Output>
+    abstract fun buildUseCase(input: Input): Flow<Output>
 
-    open suspend operator fun invoke(input: Input): Flow<Output> {
+    open operator fun invoke(input: Input): Flow<Output> {
         return buildUseCase(input).flowOn(dispatchersProvider)
     }
 }
@@ -18,9 +18,9 @@ abstract class FlowUseCase<Input : BaseInput, Output> {
 abstract class FlowNoInputUseCase<Output> {
     open val dispatchersProvider = Dispatchers.IO
 
-    abstract suspend fun buildUseCase(): Flow<Output>
+    abstract fun buildUseCase(): Flow<Output>
 
-    open suspend operator fun invoke(): Flow<Output> {
+    open operator fun invoke(): Flow<Output> {
         return buildUseCase().flowOn(dispatchersProvider)
     }
 }

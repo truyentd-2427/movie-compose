@@ -5,5 +5,6 @@ import com.truyentd.moviecompose.data.model.MovieData
 
 data class MovieDetailUiState(
     val movie: MovieData? = null,
+    val hasBookmark: Boolean = false,
     val casts: List<CastData> = emptyList(),
 )
