@@ -40,19 +40,22 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.truyentd.moviecompose.data.model.MovieData
+import com.truyentd.moviecompose.navigation.BaseDestination
+import com.truyentd.moviecompose.navigation.movie.MovieDestination
 import com.truyentd.moviecompose.presentation.components.LoadingBox
 import com.truyentd.moviecompose.presentation.screens.search.components.SearchMovieItem
 import com.truyentd.moviecompose.ui.theme.AppColors
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun ProfileScreenPreview() {
+fun SearchScreenPreview() {
     SearchScreen()
 }
 
 @Composable
 fun SearchScreen(
-    viewModel: SearchViewModel = hiltViewModel()
+    viewModel: SearchViewModel = hiltViewModel(),
+    navigator: ((BaseDestination) -> Unit)? = null
 ) {
     val moviePagingItems = viewModel.searchUiState.collectAsLazyPagingItems()
 
@@ -61,13 +64,17 @@ fun SearchScreen(
         onQueryTextChanged = {
             viewModel.onQueryTextChanged(it)
         },
+        onMovieClick = { movie ->
+            navigator?.invoke(MovieDestination.MovieDetail.createRoute(movie.id.toString()))
+        }
     )
 }
 
 @Composable
 private fun SearchScreenContent(
     moviePagingItems: LazyPagingItems<MovieData>,
-    onQueryTextChanged: ((String) -> Unit)? = null
+    onQueryTextChanged: ((String) -> Unit)? = null,
+    onMovieClick: ((MovieData) -> Unit)? = null,
 ) {
     Column(
         modifier = Modifier
@@ -82,7 +89,9 @@ private fun SearchScreenContent(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "Search Result:",
-                    modifier = Modifier.wrapContentSize().padding(horizontal = 24.dp),
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(horizontal = 24.dp),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = AppColors.Violet,
@@ -94,7 +103,10 @@ private fun SearchScreenContent(
                     contentPadding = PaddingValues(bottom = 24.dp, start = 24.dp, end = 24.dp)
                 ) {
                     items(moviePagingItems.itemCount) { index ->
-                        SearchMovieItem(movie = moviePagingItems[index])
+                        SearchMovieItem(
+                            movie = moviePagingItems[index],
+                            onMovieClick = onMovieClick,
+                        )
                     }
                     if (moviePagingItems.loadState.append is LoadState.Loading) {
                         item {

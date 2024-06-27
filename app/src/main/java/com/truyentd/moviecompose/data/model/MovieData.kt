@@ -2,6 +2,7 @@ package com.truyentd.moviecompose.data.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.truyentd.moviecompose.data.repository.source.local.database.entity.MovieEntity
 
 data class MovieData(
     @SerializedName("adult")
@@ -78,7 +79,7 @@ data class MovieData(
     val voteAverage: Double? = null,
     @SerializedName("vote_count")
     @Expose
-    val voteCount: Int? = null
+    val voteCount: Int? = null,
 ) {
     val posterUrl: String
         get() = "https://image.tmdb.org/t/p/w500/$posterPath"
@@ -95,5 +96,14 @@ data class MovieData(
     companion object {
         private const val MOVIE_LENGTH_FORMAT = "%dh %dm"
         private const val RATING_FORMAT = "%.1f/10 IMDB"
+
+        fun fromMovieEntity(movie: MovieEntity): MovieData {
+            return MovieData(
+                id = movie.id,
+                title = movie.title,
+                posterPath = movie.posterPath,
+                voteAverage = movie.voteAverage,
+            )
+        }
     }
 }
