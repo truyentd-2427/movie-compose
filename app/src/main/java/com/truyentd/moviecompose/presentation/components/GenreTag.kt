@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.truyentd.moviecompose.ui.theme.AppColors
+import com.truyentd.moviecompose.presentation.theme.AppColors
 
 @Preview(showBackground = true)
 @Composable

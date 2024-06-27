@@ -1,6 +1,7 @@
 package com.truyentd.moviecompose.presentation.screens.moviedetail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -28,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,7 +46,7 @@ import com.truyentd.moviecompose.presentation.components.LoadingBox
 import com.truyentd.moviecompose.presentation.components.SectionTitle
 import com.truyentd.moviecompose.presentation.screens.moviedetail.components.CastItem
 import com.truyentd.moviecompose.presentation.screens.search.components.CategoryTag
-import com.truyentd.moviecompose.ui.theme.AppColors
+import com.truyentd.moviecompose.presentation.theme.AppColors
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
@@ -57,12 +59,22 @@ fun MovieDetailScreen(viewModel: MovieDetailViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    MovieDetailContent(uiState = uiState, isLoading = isLoading)
+    MovieDetailContent(
+        uiState = uiState,
+        isLoading = isLoading,
+        onBookmarkClick = { isBookmark ->
+            if (isBookmark) viewModel.bookmarkMovie() else viewModel.unBookmarkMovie()
+        },
+    )
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun MovieDetailContent(uiState: MovieDetailUiState, isLoading: Boolean) {
+private fun MovieDetailContent(
+    uiState: MovieDetailUiState,
+    isLoading: Boolean,
+    onBookmarkClick: ((Boolean) -> Unit)? = null,
+) {
     LoadingBox(isLoading = isLoading) {
         Column(
             modifier = Modifier
@@ -101,8 +113,11 @@ private fun MovieDetailContent(uiState: MovieDetailUiState, isLoading: Boolean) 
                         fontWeight = FontWeight.Medium
                     )
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_bookmark_unselected),
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clickable { onBookmarkClick?.invoke(!uiState.hasBookmark) },
+                        painter = painterResource(id = if (uiState.hasBookmark) R.drawable.ic_bookmarked else R.drawable.ic_bookmark_unselected),
+                        tint = Color.Unspecified,
                         contentDescription = null,
                     )
                 }
@@ -152,7 +167,7 @@ private fun MovieDetailContent(uiState: MovieDetailUiState, isLoading: Boolean) 
                         .wrapContentSize(),
                     text = stringResource(id = R.string.description),
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(

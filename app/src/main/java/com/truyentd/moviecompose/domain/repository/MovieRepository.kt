@@ -18,4 +18,12 @@ interface MovieRepository {
     suspend fun getMovieCredits(movieId: Int): List<CastData>
 
     fun searchMovies(keyword: String): Flow<PagingData<MovieData>>
+
+    fun getBookmarkMovies(): Flow<List<MovieData>>
+
+    suspend fun saveBookmarkMovie(movie: MovieData)
+
+    suspend fun deleteBookmarkMovie(movieId: Int)
+
+    suspend fun hasBookmarkMovies(movieId: Int): Boolean
 }

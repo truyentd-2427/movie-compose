@@ -4,8 +4,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
 import com.truyentd.moviecompose.navigation.AppNavGraph
-import com.truyentd.moviecompose.navigation.composable
 import com.truyentd.moviecompose.presentation.screens.login.LoginScreen
+import com.truyentd.moviecompose.shared.extension.composable
 
 fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     navigation(

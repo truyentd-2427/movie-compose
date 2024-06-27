@@ -30,7 +30,8 @@ import coil.compose.AsyncImage
 import com.truyentd.moviecompose.R
 import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.presentation.screens.search.components.CategoryTag
-import com.truyentd.moviecompose.ui.theme.AppColors
+import com.truyentd.moviecompose.presentation.theme.AppColors
+import com.truyentd.moviecompose.presentation.theme.AppTheme
 
 @Preview(showBackground = true)
 @Composable
@@ -66,8 +67,7 @@ fun PopularMovieItem(movie: MovieData, onMovieClick: ((MovieData) -> Unit)? = nu
         ) {
             Text(
                 text = movie.title.orEmpty(),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                style = AppTheme.typography.body2.copy(fontWeight = FontWeight.W500)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Row(

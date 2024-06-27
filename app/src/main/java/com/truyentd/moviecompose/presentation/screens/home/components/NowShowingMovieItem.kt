@@ -20,7 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.truyentd.moviecompose.data.model.MovieData
-import com.truyentd.moviecompose.ui.theme.AppColors
+import com.truyentd.moviecompose.presentation.theme.AppColors
+import com.truyentd.moviecompose.presentation.theme.AppTheme
 
 @Preview(showBackground = true)
 @Composable
@@ -59,8 +60,7 @@ fun NowShowingMovieItem(
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = movie.title.orEmpty(),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
+            style = AppTheme.typography.body2.copy(fontWeight = FontWeight.W500)
         )
     }
 }

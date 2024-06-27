@@ -23,58 +23,65 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.truyentd.moviecompose.data.model.MovieData
+import com.truyentd.moviecompose.navigation.BaseDestination
+import com.truyentd.moviecompose.navigation.movie.MovieDestination
 import com.truyentd.moviecompose.presentation.components.LoadingBox
 import com.truyentd.moviecompose.presentation.screens.search.components.SearchMovieItem
-import com.truyentd.moviecompose.ui.theme.AppColors
+import com.truyentd.moviecompose.presentation.theme.AppColors
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun ProfileScreenPreview() {
+fun SearchScreenPreview() {
     SearchScreen()
 }
 
 @Composable
 fun SearchScreen(
-    viewModel: SearchViewModel = hiltViewModel()
+    viewModel: SearchViewModel = hiltViewModel(),
+    navigator: ((BaseDestination) -> Unit)? = null
 ) {
+    val queryText by viewModel.queryText.collectAsStateWithLifecycle()
     val moviePagingItems = viewModel.searchUiState.collectAsLazyPagingItems()
 
     SearchScreenContent(
+        queryText = queryText,
         moviePagingItems = moviePagingItems,
         onQueryTextChanged = {
             viewModel.onQueryTextChanged(it)
         },
+        onMovieClick = { movie ->
+            navigator?.invoke(MovieDestination.MovieDetail.createRoute(movie.id.toString()))
+        }
     )
 }
 
 @Composable
 private fun SearchScreenContent(
+    queryText: String = "",
     moviePagingItems: LazyPagingItems<MovieData>,
-    onQueryTextChanged: ((String) -> Unit)? = null
+    onQueryTextChanged: ((String) -> Unit)? = null,
+    onMovieClick: ((MovieData) -> Unit)? = null,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(AppColors.White)
     ) {
-        SearchHeader(onQueryTextChanged = onQueryTextChanged)
+        SearchHeader(queryText = queryText, onQueryTextChanged = onQueryTextChanged)
         LoadingBox(isLoading = moviePagingItems.loadState.refresh is LoadState.Loading) {
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -82,7 +89,9 @@ private fun SearchScreenContent(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "Search Result:",
-                    modifier = Modifier.wrapContentSize().padding(horizontal = 24.dp),
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(horizontal = 24.dp),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = AppColors.Violet,
@@ -94,7 +103,10 @@ private fun SearchScreenContent(
                     contentPadding = PaddingValues(bottom = 24.dp, start = 24.dp, end = 24.dp)
                 ) {
                     items(moviePagingItems.itemCount) { index ->
-                        SearchMovieItem(movie = moviePagingItems[index])
+                        SearchMovieItem(
+                            movie = moviePagingItems[index],
+                            onMovieClick = onMovieClick,
+                        )
                     }
                     if (moviePagingItems.loadState.append is LoadState.Loading) {
                         item {
@@ -108,9 +120,10 @@ private fun SearchScreenContent(
 }
 
 @Composable
-private fun SearchHeader(onQueryTextChanged: ((String) -> Unit)? = null) {
-    var queryText by remember { mutableStateOf(TextFieldValue("")) }
-
+private fun SearchHeader(
+    queryText: String,
+    onQueryTextChanged: ((String) -> Unit)? = null,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -143,8 +156,7 @@ private fun SearchHeader(onQueryTextChanged: ((String) -> Unit)? = null) {
                 Icon(Icons.Filled.Search, "", tint = AppColors.Violet)
             },
             onValueChange = { value ->
-                queryText = value
-                onQueryTextChanged?.invoke(value.text)
+                onQueryTextChanged?.invoke(value)
             },
             placeholder = { Text("Enter keyword") },
         )
