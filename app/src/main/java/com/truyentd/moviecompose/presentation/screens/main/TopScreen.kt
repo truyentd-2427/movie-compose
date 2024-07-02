@@ -23,7 +23,8 @@ import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.navigation.BaseDestination
 import com.truyentd.moviecompose.navigation.top.TopDestination
 import com.truyentd.moviecompose.navigation.top.TopNavHost
-import com.truyentd.moviecompose.ui.theme.AppColors
+import com.truyentd.moviecompose.presentation.screens.main.components.AppBottomNavigation
+import com.truyentd.moviecompose.presentation.theme.AppColors
 
 @Preview
 @Composable
@@ -38,48 +39,7 @@ fun TopScreen(navigator: ((BaseDestination) -> Unit)? = null) {
     Scaffold(
         containerColor = AppColors.White,
         bottomBar = {
-            val bottomNavScreens = listOf(
-                TopDestination.Home,
-                TopDestination.Search,
-                TopDestination.Favorite,
-            )
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentDestination = navBackStackEntry?.destination
-            BottomNavigation(
-                modifier = Modifier.navigationBarsPadding(),
-                backgroundColor = Color.White,
-                elevation = 12.dp,
-            ) {
-                bottomNavScreens.forEach { screen ->
-                    val selected =
-                        currentDestination?.hierarchy?.any { it.route == screen.route } == true
-                    BottomNavigationItem(
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = if (selected) screen.selectedIcon else screen.unselectedIcon),
-                                contentDescription = null,
-                                tint = Color.Unspecified
-                            )
-                        },
-                        selected = selected,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                // Pop up to the start destination of the graph to
-                                // avoid building up a large stack of destinations
-                                // on the back stack as users select items
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                // Avoid multiple copies of the same destination when
-                                // reselecting the same item
-                                launchSingleTop = true
-                                // Restore state when reselecting a previously selected item
-                                restoreState = true
-                            }
-                        }
-                    )
-                }
-            }
+            AppBottomNavigation(navController)
         }
     ) { innerPadding ->
         TopNavHost(

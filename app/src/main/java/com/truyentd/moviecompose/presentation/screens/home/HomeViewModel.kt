@@ -36,10 +36,10 @@ class HomeViewModel @Inject constructor(
         launchUseCase(getNowPlayingMoviesUseCase) { movies ->
             _uiState.update { uiState ->
                 val fullInfoMovies = movies.map { movie ->
-                    val movieGenres = genres.filter { genre ->
+                    val fullInfoGenres = genres.filter { genre ->
                         movie.genreIds.orEmpty().any { it == genre.id }
                     }
-                    movie.copy(genres = movieGenres)
+                    movie.copy(genres = fullInfoGenres)
                 }
                 uiState.copy(nowPlayingMovies = fullInfoMovies)
             }

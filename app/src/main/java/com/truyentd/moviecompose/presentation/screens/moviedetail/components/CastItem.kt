@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.truyentd.moviecompose.data.model.CastData
-import com.truyentd.moviecompose.ui.theme.AppColors
+import com.truyentd.moviecompose.presentation.theme.AppColors
 
 @Composable
 fun CastItem(cast: CastData, onCastClick: (() -> Unit)? = null) {

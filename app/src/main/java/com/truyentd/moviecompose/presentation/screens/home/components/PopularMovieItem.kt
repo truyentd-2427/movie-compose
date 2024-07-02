@@ -30,7 +30,7 @@ import coil.compose.AsyncImage
 import com.truyentd.moviecompose.R
 import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.presentation.screens.search.components.CategoryTag
-import com.truyentd.moviecompose.ui.theme.AppColors
+import com.truyentd.moviecompose.presentation.theme.AppColors
 
 @Preview(showBackground = true)
 @Composable

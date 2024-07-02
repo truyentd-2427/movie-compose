@@ -7,18 +7,17 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import com.truyentd.moviecompose.navigation.AppNavGraph
 import com.truyentd.moviecompose.navigation.BaseDestination
-import com.truyentd.moviecompose.navigation.composable
-import com.truyentd.moviecompose.navigation.navigate
-import com.truyentd.moviecompose.presentation.screens.favorite.FavoriteScreen
+import com.truyentd.moviecompose.presentation.screens.bookmark.BookmarkScreen
 import com.truyentd.moviecompose.presentation.screens.home.HomeScreen
 import com.truyentd.moviecompose.presentation.screens.main.TopScreen
 import com.truyentd.moviecompose.presentation.screens.search.SearchScreen
+import com.truyentd.moviecompose.shared.extension.composable
+import com.truyentd.moviecompose.shared.extension.navigate
 
 fun NavGraphBuilder.topNavGraph(navController: NavHostController) {
-    composable(route = AppNavGraph.Top.route) {
+    composable(destination = AppNavGraph.Top) {
         TopScreen(
             navigator = { destination ->
                 navController.navigate(destination)
@@ -50,14 +49,14 @@ fun TopNavHost(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            SearchScreen()
+            SearchScreen(navigator = navigator)
         }
         composable(
             destination = TopDestination.Favorite,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            FavoriteScreen()
+            BookmarkScreen()
         }
     }
 }

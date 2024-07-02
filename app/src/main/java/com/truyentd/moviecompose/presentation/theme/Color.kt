@@ -1,4 +1,4 @@
-package com.truyentd.moviecompose.ui.theme
+package com.truyentd.moviecompose.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
