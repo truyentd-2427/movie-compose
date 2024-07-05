@@ -167,7 +167,7 @@ private fun MovieDetailContent(
                         .wrapContentSize(),
                     text = stringResource(id = R.string.description),
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(

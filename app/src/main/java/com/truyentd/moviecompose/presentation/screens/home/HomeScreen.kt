@@ -1,6 +1,7 @@
 package com.truyentd.moviecompose.presentation.screens.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,40 +39,52 @@ import com.truyentd.moviecompose.navigation.BaseDestination
 import com.truyentd.moviecompose.navigation.movie.MovieDestination
 import com.truyentd.moviecompose.presentation.components.LoadingBox
 import com.truyentd.moviecompose.presentation.components.SectionTitle
+import com.truyentd.moviecompose.presentation.screens.AppViewModel
+import com.truyentd.moviecompose.presentation.screens.LocalAppViewModel
 import com.truyentd.moviecompose.presentation.screens.home.components.NowShowingMovieItem
 import com.truyentd.moviecompose.presentation.screens.home.components.PopularMovieItem
 import com.truyentd.moviecompose.presentation.theme.AppColors
+import com.truyentd.moviecompose.presentation.theme.AppTheme
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+    HomeScreenContent(uiState = HomeUiState(), isLoading = false)
 }
 
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
+    appViewModel: AppViewModel = LocalAppViewModel.current,
     navigator: ((BaseDestination) -> Unit)? = null
 ) {
     val uiState: HomeUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isLoading: Boolean by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    HomeScreenContent(uiState = uiState, isLoading = isLoading, navigator = navigator)
+    HomeScreenContent(
+        uiState = uiState,
+        isLoading = isLoading,
+        navigator = navigator,
+        switchTheme = { isDarkTheme ->
+            appViewModel.switchTheme(!appViewModel.isDarkTheme.value)
+        },
+    )
 }
 
 @Composable
 private fun HomeScreenContent(
     uiState: HomeUiState,
     isLoading: Boolean,
-    navigator: ((BaseDestination) -> Unit)? = null
+    navigator: ((BaseDestination) -> Unit)? = null,
+    switchTheme: ((Boolean) -> Unit)? = null,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 4.dp)
-            .background(AppColors.White)
+            .background(MaterialTheme.colorScheme.onPrimary)
     ) {
-        TopHeader()
+        TopHeader(switchTheme = switchTheme)
         LoadingBox(
             isLoading = isLoading,
             modifier = Modifier.fillMaxSize()
@@ -115,7 +129,7 @@ private fun HomeScreenContent(
 }
 
 @Composable
-private fun TopHeader() {
+private fun TopHeader(switchTheme: ((Boolean) -> Unit)? = null) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -125,18 +139,16 @@ private fun TopHeader() {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
+            modifier = Modifier.size(24.dp).clickable { switchTheme?.invoke(true) },
             painter = painterResource(id = R.drawable.ic_menu),
-            modifier = Modifier.size(24.dp),
-            tint = AppColors.Violet,
+            tint = MaterialTheme.colorScheme.primary,
             contentDescription = null,
         )
         Text(
             text = stringResource(id = R.string.app_name),
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            color = AppColors.Violet,
+            style = AppTheme.typography.heading5,
         )
         Spacer(modifier = Modifier.size(24.dp))
     }

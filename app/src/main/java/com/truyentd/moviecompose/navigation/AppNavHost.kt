@@ -18,11 +18,11 @@ sealed class AppNavGraph(route: String) : BaseDestination(route) {
 }
 
 @Composable
-fun AppNavHost(navController: NavHostController) {
+fun AppNavHost(navController: NavHostController, hasLoggedIn: Boolean) {
     NavHost(
         navController = navController,
         route = AppNavGraph.Root.route,
-        startDestination = AppNavGraph.Top.route
+        startDestination = if (hasLoggedIn) AppNavGraph.Top.route else AppNavGraph.Auth.route
     ) {
         authNavGraph(navController)
         topNavGraph(navController)
