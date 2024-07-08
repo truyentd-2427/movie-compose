@@ -23,7 +23,7 @@ class SearchViewModel @Inject constructor(
     private val searchMoviesUseCase: SearchMoviesUseCase,
 ) : BaseViewModel() {
 
-    private val queryText = savedStateHandle.getStateFlow(key = QUERY_TEXT_KEY, initialValue = "")
+    val queryText = savedStateHandle.getStateFlow(key = QUERY_TEXT_KEY, initialValue = "")
 
     val searchUiState = queryText.debounce(timeoutMillis = 500)
         .distinctUntilChanged()

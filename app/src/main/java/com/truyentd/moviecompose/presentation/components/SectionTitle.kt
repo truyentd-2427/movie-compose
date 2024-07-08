@@ -17,13 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.truyentd.moviecompose.R
 import com.truyentd.moviecompose.presentation.theme.AppColors
+import com.truyentd.moviecompose.presentation.theme.AppTheme
 
 @Preview(showBackground = true)
 @Composable
@@ -42,9 +42,7 @@ fun SectionTitle(title: String, onSeeMoreClick: (() -> Unit)? = null) {
         Text(
             text = title,
             textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            color = AppColors.Violet
+            style = AppTheme.typography.heading5
         )
         Spacer(modifier = Modifier.weight(1f))
         Box(
