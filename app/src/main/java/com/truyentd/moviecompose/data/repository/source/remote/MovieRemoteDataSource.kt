@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class MovieRemoteDataSource @Inject constructor(
-    private val authApi: AuthApi
+    private val authApi: AuthApi,
 ) {
     suspend fun getNowPlayingMovies(): List<MovieData> {
         return authApi.execute { getNowPlayingMovies().data }
@@ -28,6 +28,8 @@ class MovieRemoteDataSource @Inject constructor(
     }
 
     suspend fun getMovieGenres(): List<GenreData> {
+        // Uncomment this to testing pull to refresh
+        // delay(2000)
         return authApi.execute { getMovieGenres().genres }
     }
 

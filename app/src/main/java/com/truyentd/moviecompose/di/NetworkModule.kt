@@ -2,6 +2,7 @@ package com.truyentd.moviecompose.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.truyentd.moviecompose.data.repository.source.local.api.SharedPrefApi
 import com.truyentd.moviecompose.data.repository.source.remote.api.AuthApi
 import com.truyentd.moviecompose.data.repository.source.remote.api.NoneAuthApi
 import com.truyentd.moviecompose.data.repository.source.remote.api.helper.ApiConfig
@@ -12,16 +13,19 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.logging.HttpLoggingInterceptor
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
     @Provides
+    @Singleton
     fun provideGson(): Gson {
         return GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
     }
 
     @Provides
+    @Singleton
     fun provideNoneAuthApi(gson: Gson): NoneAuthApi {
         return ServiceGenerator.generate(
             baseUrl = ApiConfig.baseUrl(),
@@ -33,14 +37,15 @@ class NetworkModule {
     }
 
     @Provides
-    fun provideAuthApi(gson: Gson): AuthApi {
+    @Singleton
+    fun provideAuthApi(gson: Gson, sharedPrefApi: SharedPrefApi): AuthApi {
         return ServiceGenerator.generate(
             baseUrl = ApiConfig.baseUrl(),
             serviceClass = AuthApi::class.java,
             gson = gson,
             authenticator = null,
             interceptors = arrayOf(
-                AuthInterceptor(),
+                AuthInterceptor(sharedPrefApi),
             ),
             loggingInterceptor = HttpLoggingInterceptor(),
         )

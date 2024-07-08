@@ -4,26 +4,47 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
+import androidx.navigation.navOptions
 import com.truyentd.moviecompose.navigation.BaseDestination
 
 fun NavGraphBuilder.composable(
     destination: BaseDestination,
     enterTransition: (@JvmSuppressWildcards
-    AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? = null,
+    AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? = {
+        slideIntoContainer(
+            AnimatedContentTransitionScope.SlideDirection.Start,
+            tween(300)
+        )
+    },
     exitTransition: (@JvmSuppressWildcards
-    AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? = null,
+    AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? = {
+        slideOutOfContainer(
+            AnimatedContentTransitionScope.SlideDirection.Start,
+            tween(300)
+        )
+    },
     popEnterTransition: (@JvmSuppressWildcards
-    AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? =
-        enterTransition,
+    AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? = {
+        slideIntoContainer(
+            AnimatedContentTransitionScope.SlideDirection.End,
+            tween(300)
+        )
+    },
     popExitTransition: (@JvmSuppressWildcards
-    AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? =
-        exitTransition,
+    AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? = {
+        slideOutOfContainer(
+            AnimatedContentTransitionScope.SlideDirection.End,
+            tween(300)
+        )
+    },
     content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
     composable(
@@ -48,7 +69,11 @@ fun NavGraphBuilder.composable(
  * When previousBackstackEntry is popped out from navigation stack, savedStateHandle will return null and cannot retrieve data.
  * eg.Login -> Home, the Login screen will be popped from the back-stack on logging in successfully.
  */
-fun NavHostController.navigate(destination: BaseDestination, parcel: Pair<String, Any?>? = null) {
+fun NavHostController.navigate(
+    destination: BaseDestination,
+    parcel: Pair<String, Any?>? = null,
+    builder: (NavOptionsBuilder.() -> Unit)? = null,
+) {
     when (destination) {
         is BaseDestination.Up -> {
             destination.results.forEach { (key, value) ->
@@ -57,9 +82,9 @@ fun NavHostController.navigate(destination: BaseDestination, parcel: Pair<String
             navigateUp()
         }
 
-        is BaseDestination.PopToBackStack -> {
+        is BaseDestination.PopUpTo -> {
             destination.results.forEach { (key, value) ->
-                previousBackStackEntry?.savedStateHandle?.set(key, value)
+                getBackStackEntry(destination.targetDestination.route).savedStateHandle[key] = value
             }
             popBackStack(destination.targetDestination.route, inclusive = destination.inclusive)
         }
@@ -68,7 +93,11 @@ fun NavHostController.navigate(destination: BaseDestination, parcel: Pair<String
             parcel?.let { (key, value) ->
                 currentBackStackEntry?.savedStateHandle?.set(key, value)
             }
-            navigate(route = destination.destination)
+            if (builder != null) {
+                navigate(destination.destination, navOptions(builder))
+            } else {
+                navigate(destination.destination)
+            }
         }
     }
 }

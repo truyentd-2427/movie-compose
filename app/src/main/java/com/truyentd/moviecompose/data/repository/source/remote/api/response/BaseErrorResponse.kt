@@ -7,10 +7,7 @@ data class BaseErrorResponse(
     @Expose
     @SerializedName("status_code")
     val code: Int,
-//    @Expose
-//    @SerializedName("data")
-//    val data: Any?,
-//    @Expose
-//    @SerializedName("message")
-//    val message: String,
+    @Expose
+    @SerializedName("status_message")
+    val message: String,
 )

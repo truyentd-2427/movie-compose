@@ -1,5 +1,16 @@
 <resources>
     <string name="app_name">MovieCompose</string>
+
+    <!-- Validate message -->
+    <string name="email_is_invalid">Email is invalid</string>
+    <string name="password_is_invalid">Password is invalid</string>
+
+    <!-- Error message -->
+    <string name="network_error_message">An error has occurred. Please try again later.</string>
+    <string name="server_error_message">An error has occurred. Please try again later.</string>
+    <string name="unexpected_error_message">An error has occurred. Please try again later.</string>
+
+    <!-- Screen -->
     <string name="now_showing">Now showing</string>
     <string name="popular">Popular</string>
     <string name="see_more">See more</string>
@@ -10,4 +21,15 @@
     <string name="description">Description</string>
     <string name="imdb_rating">%s/10 IMDB</string>
     <string name="movie_length">%dh %dh</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="email_description">Email must be valid format</string>
+    <string name="password_description">Password must be greater than 5 characters</string>
+    <string name="login">Login</string>
+    <string name="search_result">Search result:</string>
+    <string name="search">Search</string>
+    <string name="enter_keyword">Enter keyword</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="list_movies">List movies:</string>
+    <string name="close">Close</string>
 </resources>

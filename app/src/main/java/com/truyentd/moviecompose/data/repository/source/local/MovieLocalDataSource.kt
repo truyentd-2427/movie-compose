@@ -1,8 +1,8 @@
 package com.truyentd.moviecompose.data.repository.source.local
 
 import com.truyentd.moviecompose.data.model.MovieData
-import com.truyentd.moviecompose.data.repository.source.local.database.dao.MovieDao
-import com.truyentd.moviecompose.data.repository.source.local.database.entity.MovieEntity
+import com.truyentd.moviecompose.data.repository.source.local.api.database.dao.MovieDao
+import com.truyentd.moviecompose.data.repository.source.local.api.database.entity.MovieEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

@@ -3,6 +3,7 @@ package com.truyentd.moviecompose.presentation.screens.moviedetail
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -23,6 +24,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,8 +45,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.truyentd.moviecompose.R
 import com.truyentd.moviecompose.data.model.CastData
+import com.truyentd.moviecompose.navigation.BaseDestination
 import com.truyentd.moviecompose.presentation.components.LoadingBox
 import com.truyentd.moviecompose.presentation.components.SectionTitle
+import com.truyentd.moviecompose.presentation.dialog.AppErrorDialog
 import com.truyentd.moviecompose.presentation.screens.moviedetail.components.CastItem
 import com.truyentd.moviecompose.presentation.screens.search.components.CategoryTag
 import com.truyentd.moviecompose.presentation.theme.AppColors
@@ -51,17 +56,29 @@ import com.truyentd.moviecompose.presentation.theme.AppColors
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MovieDetailScreenPreview() {
-    MovieDetailScreen()
+    MovieDetailContent(uiState = MovieDetailUiState(), isLoading = false)
 }
 
 @Composable
-fun MovieDetailScreen(viewModel: MovieDetailViewModel = hiltViewModel()) {
+fun MovieDetailScreen(
+    viewModel: MovieDetailViewModel = hiltViewModel(),
+    navigator: (BaseDestination) -> Unit,
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
+
+    if (errorState.shouldShowDialog) {
+        AppErrorDialog(
+            throwable = errorState.throwable,
+            onDismissRequest = viewModel::dismissErrorDialog,
+        )
+    }
 
     MovieDetailContent(
         uiState = uiState,
         isLoading = isLoading,
+        onBackClick = { navigator(BaseDestination.Up()) },
         onBookmarkClick = { isBookmark ->
             if (isBookmark) viewModel.bookmarkMovie() else viewModel.unBookmarkMovie()
         },
@@ -73,6 +90,7 @@ fun MovieDetailScreen(viewModel: MovieDetailViewModel = hiltViewModel()) {
 private fun MovieDetailContent(
     uiState: MovieDetailUiState,
     isLoading: Boolean,
+    onBackClick: (() -> Unit)? = null,
     onBookmarkClick: ((Boolean) -> Unit)? = null,
 ) {
     LoadingBox(isLoading = isLoading) {
@@ -83,14 +101,32 @@ private fun MovieDetailContent(
                 .navigationBarsPadding()
                 .verticalScroll(rememberScrollState()),
         ) {
-            AsyncImage(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(300.dp),
-                model = uiState.movie?.backdropUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-            )
+                    .wrapContentHeight()
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp),
+                    model = uiState.movie?.backdropUrl,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                )
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .align(Alignment.TopStart)
+                        .offset(x = 24.dp, y = 48.dp)
+                        .clickable {
+                            onBackClick?.invoke()
+                        },
+                    contentDescription = null,
+                    tint = AppColors.White
+                )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()

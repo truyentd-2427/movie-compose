@@ -1,9 +1,13 @@
 package com.truyentd.moviecompose.presentation.screens.home
 
 import com.truyentd.moviecompose.data.model.GenreData
+import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.domain.usecase.movie.GetMovieGenresUseCase
 import com.truyentd.moviecompose.domain.usecase.movie.GetNowPlayingMoviesUseCase
 import com.truyentd.moviecompose.domain.usecase.movie.GetPopularMoviesUseCase
+import com.truyentd.moviecompose.domain.usecase.user.LogoutUseCase
+import com.truyentd.moviecompose.navigation.AppNavGraph
+import com.truyentd.moviecompose.navigation.movie.MovieDestination
 import com.truyentd.moviecompose.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +20,7 @@ class HomeViewModel @Inject constructor(
     private val getMovieGenresUseCase: GetMovieGenresUseCase,
     private val getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase,
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
+    private val logoutUseCase: LogoutUseCase,
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -56,5 +61,19 @@ class HomeViewModel @Inject constructor(
             }
             _uiState.update { it.copy(popularMovies = moviesWithGenres.take(10)) }
         }
+    }
+
+    override fun onRefresh() {
+        super.onRefresh()
+        getMovieGenres()
+    }
+
+    fun goToMovieDetail(movie: MovieData) {
+        launch { _navigator.emit(MovieDestination.MovieDetail.createRoute(movie.id.toString())) }
+    }
+
+    fun logout() {
+        logoutUseCase()
+        launch { _navigator.emit(AppNavGraph.Auth) }
     }
 }

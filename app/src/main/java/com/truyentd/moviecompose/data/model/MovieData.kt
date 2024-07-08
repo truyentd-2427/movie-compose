@@ -2,7 +2,7 @@ package com.truyentd.moviecompose.data.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.truyentd.moviecompose.data.repository.source.local.database.entity.MovieEntity
+import com.truyentd.moviecompose.data.repository.source.local.api.database.entity.MovieEntity
 
 data class MovieData(
     @SerializedName("adult")

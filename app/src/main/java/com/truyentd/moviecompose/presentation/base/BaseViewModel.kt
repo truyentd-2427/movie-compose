@@ -1,10 +1,13 @@
 package com.truyentd.moviecompose.presentation.base
 
+import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.truyentd.moviecompose.domain.interactor.input.BaseInput
 import com.truyentd.moviecompose.domain.usecase.base.AsyncNoInputUseCase
 import com.truyentd.moviecompose.domain.usecase.base.AsyncUseCase
+import com.truyentd.moviecompose.navigation.BaseDestination
+import com.truyentd.moviecompose.presentation.state.ErrorState
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -14,22 +17,29 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 open class BaseViewModel : ViewModel() {
-    private var loadingCount: Int = 0
+    protected val _navigator = MutableSharedFlow<BaseDestination>()
+    val navigator = _navigator.asSharedFlow()
 
+    private var loadingCount: Int = 0
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    protected val _error = MutableSharedFlow<Throwable>()
-    val error = _error.asSharedFlow()
+    protected val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
+    protected val _errorState = MutableStateFlow(ErrorState())
+    val errorState = _errorState.asStateFlow()
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        _error.tryEmit(throwable)
+        _errorState.update { it.copy(throwable = throwable, shouldShowDialog = true) }
     }
-
     protected val scope = viewModelScope.plus(exceptionHandler)
 
     fun <I : BaseInput, O> launchUseCase(
@@ -49,19 +59,21 @@ open class BaseViewModel : ViewModel() {
                         showLoading()
                     }
                 }
-                onSuccess {
-                    onSuccess?.invoke(it)
+                onSuccess { data ->
+                    onSuccess?.invoke(data)
                     if (showLoading) {
                         hideLoading()
                     }
                 }
-                onError {
-                    onError?.invoke(it)
+                onError { throwable ->
+                    onError?.invoke(throwable)
                     if (showLoading) {
                         hideLoading()
                     }
                     if (showError) {
-                        _error.tryEmit(it)
+                        _errorState.update {
+                            it.copy(throwable = throwable, shouldShowDialog = true)
+                        }
                     }
                 }
             }
@@ -84,28 +96,44 @@ open class BaseViewModel : ViewModel() {
                         showLoading()
                     }
                 }
-                onSuccess {
-                    onSuccess?.invoke(it)
+                onSuccess { data ->
+                    onSuccess?.invoke(data)
                     if (showLoading) {
                         hideLoading()
                     }
                 }
-                onError {
-                    onError?.invoke(it)
+                onError { throwable ->
+                    onError?.invoke(throwable)
                     if (showLoading) {
                         hideLoading()
                     }
                     if (showError) {
-                        _error.tryEmit(it)
+                        _errorState.update {
+                            it.copy(throwable = throwable, shouldShowDialog = true)
+                        }
                     }
                 }
             }
         }
     }
 
+    protected fun launch(
+        context: CoroutineContext = EmptyCoroutineContext,
+        job: suspend () -> Unit,
+    ) {
+        viewModelScope.launch(context) {
+            job.invoke()
+        }
+    }
+
+    @CallSuper
+    open fun onRefresh() {
+        _isRefreshing.update { true }
+    }
+
     protected fun showLoading() {
-        if (loadingCount == 0) {
-            _isLoading.value = true
+        if (loadingCount == 0 && !isRefreshing.value) {
+            _isLoading.update { true }
         }
         loadingCount++
     }
@@ -113,11 +141,16 @@ open class BaseViewModel : ViewModel() {
     protected fun hideLoading() {
         loadingCount--
         if (loadingCount == 0) {
-            _isLoading.value = false
+            _isRefreshing.update { false }
+            _isLoading.update { false }
         }
     }
 
     protected fun <T> Flow<T>.handleLoading(): Flow<T> = this
         .onStart { showLoading() }
         .onCompletion { hideLoading() }
+
+    fun dismissErrorDialog() {
+        _errorState.update { it.copy(throwable = null, shouldShowDialog = false) }
+    }
 }

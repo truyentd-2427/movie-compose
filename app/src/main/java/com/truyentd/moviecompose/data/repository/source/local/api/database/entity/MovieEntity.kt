@@ -1,4 +1,4 @@
-package com.truyentd.moviecompose.data.repository.source.local.database.entity
+package com.truyentd.moviecompose.data.repository.source.local.api.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
