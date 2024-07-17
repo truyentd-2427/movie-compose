@@ -23,7 +23,7 @@ class SearchMoviesPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieData> {
         return try {
             val page = params.key ?: 1
-            delay(1000) // TODO Remove later
+            delay(1000) // TODO Test loading in case network so fast
             val response = authApi.execute { searchMovies(keyword = keyword, page) }
             val nextPage = if (page + 1 <= (response.totalPages ?: 0)) page + 1 else null
             LoadResult.Page(

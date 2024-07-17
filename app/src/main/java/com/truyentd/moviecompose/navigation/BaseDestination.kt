@@ -20,7 +20,7 @@ abstract class BaseDestination(val route: String = "") {
         }
     }
 
-    data class PopUpTo(
+    data class PopBackStack(
         val targetDestination: BaseDestination,
         val inclusive: Boolean = false,
         val results: HashMap<String, Any> = hashMapOf(),

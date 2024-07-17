@@ -82,7 +82,7 @@ fun NavHostController.navigate(
             navigateUp()
         }
 
-        is BaseDestination.PopUpTo -> {
+        is BaseDestination.PopBackStack -> {
             destination.results.forEach { (key, value) ->
                 getBackStackEntry(destination.targetDestination.route).savedStateHandle[key] = value
             }
