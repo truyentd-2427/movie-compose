@@ -9,6 +9,7 @@ import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.data.repository.source.remote.api.AuthApi
 import com.truyentd.moviecompose.data.repository.source.remote.api.helper.execute
 import com.truyentd.moviecompose.data.repository.source.remote.paging.SearchMoviesPagingSource
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -28,8 +29,8 @@ class MovieRemoteDataSource @Inject constructor(
     }
 
     suspend fun getMovieGenres(): List<GenreData> {
-        // Uncomment this to testing pull to refresh
-        // delay(2000)
+        // Delay for testing pull to refresh
+        delay(2000)
         return authApi.execute { getMovieGenres().genres }
     }
 
