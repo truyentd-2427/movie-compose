@@ -10,7 +10,7 @@ class UserRepositoryImpl @Inject constructor(
 ) : UserRepository {
     override suspend fun login() {
         delay(1500)
-        localDataSource.saveAccessToken("PLACE_ACCESS_TOKEN_HERE")
+        localDataSource.saveAccessToken("eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0MjdiNWFhOGE0NmFmMGE5OGUyYjM5OTIxMThmNDYzYiIsInN1YiI6IjVmOWZiZTJjZjA0ZDAxMDAzN2E0ZDc5YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.m-Dda75kQLr1zEk-xDKJpRLAi1G0bXVTq8sMt1LE02c")
         localDataSource.saveHasLoggedIn(true)
     }
 
