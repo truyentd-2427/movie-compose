@@ -33,7 +33,7 @@ object AppColors {
 
     // Dark color scheme
     val PrimaryDark = Color(0xFFC2C1FF)
-    val OnPrimaryDark = Color(0xFF2B2A60)
+    val OnPrimaryDark = Color(0xFF1A2130)
     val SecondaryDark = Color(0xFFC7C4DD)
     val OnSecondaryDark = Color(0xFF2F2F42)
     val TertiaryDark = Color(0xFFEAB9D2)
@@ -48,4 +48,5 @@ object AppColors {
     val Portage = Color(0xFF88A4E8)
     val WhiteLilac = Color(0xFFF0EFFA)
     val Mischka = Color(0xFFE5E4EA)
+    val FlamePea = Color(0xFFDD5746)
 }

@@ -21,8 +21,8 @@ sealed class TopDestination(
         selectedIcon = R.drawable.ic_ticket_selected,
     )
 
-    object Favorite : TopDestination(
-        route = "favorite",
+    object Bookmark : TopDestination(
+        route = "bookmark",
         unselectedIcon = R.drawable.ic_bookmark_unselected,
         selectedIcon = R.drawable.ic_bookmark_selected,
     )

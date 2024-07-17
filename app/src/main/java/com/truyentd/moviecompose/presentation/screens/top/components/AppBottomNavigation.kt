@@ -1,4 +1,4 @@
-package com.truyentd.moviecompose.presentation.screens.main.components
+package com.truyentd.moviecompose.presentation.screens.top.components
 
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material.BottomNavigation
@@ -18,10 +18,10 @@ import com.truyentd.moviecompose.navigation.top.TopDestination
 
 @Composable
 fun AppBottomNavigation(navController: NavController) {
-    val bottomNavScreens = listOf(
+    val bottomNavDestinations = listOf(
         TopDestination.Home,
         TopDestination.Search,
-        TopDestination.Favorite,
+        TopDestination.Bookmark,
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -30,7 +30,7 @@ fun AppBottomNavigation(navController: NavController) {
         backgroundColor = Color.White,
         elevation = 12.dp,
     ) {
-        bottomNavScreens.forEach { screen ->
+        bottomNavDestinations.forEach { screen ->
             val selected =
                 currentDestination?.hierarchy?.any { it.route == screen.route } == true
             BottomNavigationItem(

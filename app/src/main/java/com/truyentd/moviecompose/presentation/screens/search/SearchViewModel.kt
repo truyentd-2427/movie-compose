@@ -3,8 +3,11 @@ package com.truyentd.moviecompose.presentation.screens.search
 import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.domain.usecase.movie.SearchMoviesUseCase
+import com.truyentd.moviecompose.navigation.movie.MovieDestination
 import com.truyentd.moviecompose.presentation.base.BaseViewModel
+import com.truyentd.moviecompose.shared.constant.KEY_QUERY_TEXT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -23,7 +26,7 @@ class SearchViewModel @Inject constructor(
     private val searchMoviesUseCase: SearchMoviesUseCase,
 ) : BaseViewModel() {
 
-    val queryText = savedStateHandle.getStateFlow(key = QUERY_TEXT_KEY, initialValue = "")
+    val queryText = savedStateHandle.getStateFlow(key = KEY_QUERY_TEXT, initialValue = "")
 
     val searchUiState = queryText.debounce(timeoutMillis = 500)
         .distinctUntilChanged()
@@ -42,10 +45,10 @@ class SearchViewModel @Inject constructor(
         )
 
     fun onQueryTextChanged(keyword: String) {
-        savedStateHandle[QUERY_TEXT_KEY] = keyword
+        savedStateHandle[KEY_QUERY_TEXT] = keyword
     }
 
-    companion object {
-        private const val QUERY_TEXT_KEY = "QUERY_TEXT_KEY"
+    fun goToMovieDetail(movie: MovieData) {
+        launch { _navigator.emit(MovieDestination.MovieDetail.createRoute(movie.id.toString())) }
     }
 }

@@ -2,6 +2,7 @@ package com.truyentd.moviecompose.presentation.screens.bookmark
 
 import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.domain.usecase.movie.GetBookmarkMoviesUseCase
+import com.truyentd.moviecompose.navigation.movie.MovieDestination
 import com.truyentd.moviecompose.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,4 +23,8 @@ class BookmarkViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = emptyList(),
     )
+
+    fun goToMovieDetail(movie: MovieData) {
+        launch { _navigator.emit(MovieDestination.MovieDetail.createRoute(movie.id.toString())) }
+    }
 }

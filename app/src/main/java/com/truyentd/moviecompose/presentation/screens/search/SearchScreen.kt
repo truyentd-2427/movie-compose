@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,36 +37,44 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.truyentd.moviecompose.R
 import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.navigation.BaseDestination
-import com.truyentd.moviecompose.navigation.movie.MovieDestination
 import com.truyentd.moviecompose.presentation.components.LoadingBox
+import com.truyentd.moviecompose.presentation.dialog.AppErrorDialog
 import com.truyentd.moviecompose.presentation.screens.search.components.SearchMovieItem
 import com.truyentd.moviecompose.presentation.theme.AppColors
+import com.truyentd.moviecompose.shared.extension.collectAsEffect
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SearchScreenPreview() {
-    SearchScreen()
+    SearchScreen {}
 }
 
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
-    navigator: ((BaseDestination) -> Unit)? = null
+    navigator: (BaseDestination) -> Unit,
 ) {
+    viewModel.navigator.collectAsEffect { destination -> navigator(destination) }
+
     val queryText by viewModel.queryText.collectAsStateWithLifecycle()
     val moviePagingItems = viewModel.searchUiState.collectAsLazyPagingItems()
+    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
+
+    if (errorState.shouldShowDialog) {
+        AppErrorDialog(
+            throwable = errorState.throwable,
+            onDismissRequest = viewModel::dismissErrorDialog,
+        )
+    }
 
     SearchScreenContent(
         queryText = queryText,
         moviePagingItems = moviePagingItems,
-        onQueryTextChanged = {
-            viewModel.onQueryTextChanged(it)
-        },
-        onMovieClick = { movie ->
-            navigator?.invoke(MovieDestination.MovieDetail.createRoute(movie.id.toString()))
-        }
+        onQueryTextChanged = viewModel::onQueryTextChanged,
+        onMovieClick = viewModel::goToMovieDetail
     )
 }
 
@@ -88,7 +97,7 @@ private fun SearchScreenContent(
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Search Result:",
+                    text = stringResource(id = R.string.search_result),
                     modifier = Modifier
                         .wrapContentSize()
                         .padding(horizontal = 24.dp),
@@ -131,7 +140,7 @@ private fun SearchHeader(
             .padding(top = 24.dp, bottom = 16.dp, start = 24.dp, end = 24.dp)
     ) {
         Text(
-            text = "Search",
+            text = stringResource(id = R.string.search),
             textAlign = TextAlign.Start,
             fontSize = 20.sp,
             fontWeight = FontWeight.W600,
@@ -158,7 +167,7 @@ private fun SearchHeader(
             onValueChange = { value ->
                 onQueryTextChanged?.invoke(value)
             },
-            placeholder = { Text("Enter keyword") },
+            placeholder = { Text(stringResource(id = R.string.enter_keyword)) },
         )
     }
 }

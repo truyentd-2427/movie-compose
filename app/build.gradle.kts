@@ -55,8 +55,7 @@ android {
 }
 
 dependencies {
-
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.activity:activity-compose:1.9.0")
 
     // UI
@@ -65,11 +64,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-
     implementation("androidx.compose.material:material:1.6.7")
-
-    // Core KTX
-    implementation("androidx.core:core-ktx:1.13.1")
 
     // Lifecycle
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -107,6 +102,9 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
+
+    // Security
+    implementation("androidx.security:security-crypto-ktx:1.1.0-alpha06")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

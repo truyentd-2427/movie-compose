@@ -2,8 +2,8 @@ package com.truyentd.moviecompose.di
 
 import android.app.Application
 import androidx.room.Room
-import com.truyentd.moviecompose.data.repository.source.local.database.MovieDatabase
-import com.truyentd.moviecompose.data.repository.source.local.database.dao.MovieDao
+import com.truyentd.moviecompose.data.repository.source.local.api.MovieDatabase
+import com.truyentd.moviecompose.data.repository.source.local.api.database.dao.MovieDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

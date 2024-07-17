@@ -101,22 +101,6 @@ fun SearchMovieItem(
                 Spacer(modifier = Modifier.width(4.dp))
                 CategoryTag("Fantasy")
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.wrapContentSize(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_clock),
-                    modifier = Modifier.size(12.dp),
-                    contentDescription = null,
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = movie?.lengthFormatted.orEmpty(),
-                    fontSize = 12.sp,
-                )
-            }
         }
     }
 }

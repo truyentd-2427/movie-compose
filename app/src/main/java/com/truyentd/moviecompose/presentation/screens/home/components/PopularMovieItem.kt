@@ -52,9 +52,7 @@ fun PopularMovieItem(movie: MovieData, onMovieClick: ((MovieData) -> Unit)? = nu
             modifier = Modifier
                 .width(85.dp)
                 .height(120.dp)
-                .clip(
-                    shape = RoundedCornerShape(8.dp)
-                ),
+                .clip(shape = RoundedCornerShape(8.dp)),
             model = movie.posterUrl,
             contentDescription = null,
             contentScale = ContentScale.Crop,
