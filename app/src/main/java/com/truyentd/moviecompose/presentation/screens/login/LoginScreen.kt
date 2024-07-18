@@ -53,7 +53,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     navigator: ((BaseDestination) -> Unit),
 ) {
-    viewModel.navigator.collectAsEffect { navigator(AppNavGraph.Top) }
+    viewModel.navigator.collectAsEffect { destination -> navigator(destination) }
 
     val emailInput by viewModel.emailInput.collectAsStateWithLifecycle()
     val passwordInput by viewModel.passwordInput.collectAsStateWithLifecycle()
