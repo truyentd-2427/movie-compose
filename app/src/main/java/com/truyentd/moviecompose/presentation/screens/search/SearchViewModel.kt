@@ -5,8 +5,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.domain.usecase.movie.SearchMoviesUseCase
-import com.truyentd.moviecompose.navigation.movie.MovieDestination
 import com.truyentd.moviecompose.presentation.base.BaseViewModel
+import com.truyentd.moviecompose.presentation.navigation.AppRoute
 import com.truyentd.moviecompose.shared.constant.KEY_QUERY_TEXT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -49,6 +49,6 @@ class SearchViewModel @Inject constructor(
     }
 
     fun goToMovieDetail(movie: MovieData) {
-        launch { _navigator.emit(MovieDestination.MovieDetail.createRoute(movie.id.toString())) }
+        launch { _navigator.emit(AppRoute.MovieDetail(movie.id ?: -1)) }
     }
 }

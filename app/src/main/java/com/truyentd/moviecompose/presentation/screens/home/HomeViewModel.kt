@@ -6,9 +6,8 @@ import com.truyentd.moviecompose.domain.usecase.movie.GetMovieGenresUseCase
 import com.truyentd.moviecompose.domain.usecase.movie.GetNowPlayingMoviesUseCase
 import com.truyentd.moviecompose.domain.usecase.movie.GetPopularMoviesUseCase
 import com.truyentd.moviecompose.domain.usecase.user.LogoutUseCase
-import com.truyentd.moviecompose.navigation.AppNavGraph
-import com.truyentd.moviecompose.navigation.movie.MovieDestination
 import com.truyentd.moviecompose.presentation.base.BaseViewModel
+import com.truyentd.moviecompose.presentation.navigation.AppRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -68,12 +67,12 @@ class HomeViewModel @Inject constructor(
         getMovieGenres()
     }
 
-    fun goToMovieDetail(movie: MovieData) {
-        launch { _navigator.emit(MovieDestination.MovieDetail.createRoute(movie.id.toString())) }
+    fun goToMovieDetail(movie: MovieData?) {
+        launch { _navigator.emit(AppRoute.MovieDetail(movie?.id ?: -1)) }
     }
 
     fun logout() {
         logoutUseCase()
-        launch { _navigator.emit(AppNavGraph.Auth) }
+        launch { _navigator.emit(AppRoute.AuthGraph) }
     }
 }

@@ -2,14 +2,10 @@ package com.truyentd.moviecompose.presentation.screens.bookmark
 
 import com.truyentd.moviecompose.data.model.MovieData
 import com.truyentd.moviecompose.domain.usecase.movie.GetBookmarkMoviesUseCase
-import com.truyentd.moviecompose.navigation.movie.MovieDestination
 import com.truyentd.moviecompose.presentation.base.BaseViewModel
+import com.truyentd.moviecompose.presentation.navigation.AppRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -25,6 +21,6 @@ class BookmarkViewModel @Inject constructor(
     )
 
     fun goToMovieDetail(movie: MovieData) {
-        launch { _navigator.emit(MovieDestination.MovieDetail.createRoute(movie.id.toString())) }
+        launch { _navigator.emit(AppRoute.MovieDetail(movie.id ?: -1)) }
     }
 }

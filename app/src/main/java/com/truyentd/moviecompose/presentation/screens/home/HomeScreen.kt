@@ -1,8 +1,9 @@
 package com.truyentd.moviecompose.presentation.screens.home
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,13 +24,20 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -39,16 +47,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.truyentd.moviecompose.R
 import com.truyentd.moviecompose.data.model.MovieData
-import com.truyentd.moviecompose.navigation.BaseDestination
 import com.truyentd.moviecompose.presentation.components.LoadingBox
 import com.truyentd.moviecompose.presentation.components.SectionTitle
 import com.truyentd.moviecompose.presentation.dialog.AppErrorDialog
+import com.truyentd.moviecompose.presentation.navigation.BaseDestination
 import com.truyentd.moviecompose.presentation.screens.AppViewModel
 import com.truyentd.moviecompose.presentation.screens.LocalAppViewModel
 import com.truyentd.moviecompose.presentation.screens.home.components.NowShowingMovieItem
 import com.truyentd.moviecompose.presentation.screens.home.components.PopularMovieItem
 import com.truyentd.moviecompose.presentation.theme.AppTheme
 import com.truyentd.moviecompose.shared.extension.collectAsEffect
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
@@ -69,11 +79,28 @@ fun HomeScreen(
 ) {
     viewModel.navigator.collectAsEffect { destination -> navigator(destination) }
 
+    var backPressedOnce by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val errorState by viewModel.errorState.collectAsStateWithLifecycle()
     val darkTheme by appViewModel.isDarkTheme.collectAsStateWithLifecycle()
+    val activity = (LocalContext.current as? Activity)
+
+    BackHandler(true) {
+        if (backPressedOnce) {
+            activity?.finish()
+        } else {
+            backPressedOnce = true
+            scope.launch {
+                appViewModel.showSnackbar("Press again to exit")
+                delay(1000)
+                backPressedOnce = false
+            }
+        }
+    }
 
     if (errorState.shouldShowDialog) {
         AppErrorDialog(
@@ -180,39 +207,42 @@ private fun TopHeader(
     val themeIconId = if (darkTheme) R.drawable.ic_sun else R.drawable.ic_moon
     val rotationAngle by animateFloatAsState(targetValue = if (darkTheme) 180f else 0f, label = "")
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp)
-            .height(60.dp)
-            .wrapContentSize(),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
+    Surface(shadowElevation = 4.dp) {
+        Row(
             modifier = Modifier
-                .size(24.dp)
-                .graphicsLayer(rotationZ = rotationAngle)
-                .clickable { switchTheme?.invoke() },
-            painter = painterResource(id = themeIconId),
-            tint = MaterialTheme.colorScheme.primary,
-            contentDescription = null,
-        )
-        Spacer(modifier = Modifier.size(24.dp))
-        Text(
-            text = stringResource(id = R.string.app_name),
-            modifier = Modifier.weight(1f),
-            textAlign = TextAlign.Center,
-            style = AppTheme.typography.heading5,
-        )
-        Spacer(modifier = Modifier.size(24.dp))
-        Icon(
-            modifier = Modifier
-                .size(24.dp)
-                .clickable { logout?.invoke() },
-            painter = painterResource(id = R.drawable.ic_logout),
-            tint = MaterialTheme.colorScheme.primary,
-            contentDescription = null,
-        )
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .height(60.dp)
+                .wrapContentSize(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            IconButton(onClick = { switchTheme?.invoke() }) {
+                Icon(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .graphicsLayer(rotationZ = rotationAngle),
+                    painter = painterResource(id = themeIconId),
+                    tint = MaterialTheme.colorScheme.primary,
+                    contentDescription = null,
+                )
+            }
+            Spacer(modifier = Modifier.size(24.dp))
+            Text(
+                text = stringResource(id = R.string.app_name),
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.Center,
+                style = AppTheme.typography.heading5,
+            )
+            Spacer(modifier = Modifier.size(24.dp))
+            IconButton(onClick = { logout?.invoke() }) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    painter = painterResource(id = R.drawable.ic_logout),
+                    tint = MaterialTheme.colorScheme.primary,
+                    contentDescription = null,
+                )
+            }
+        }
     }
 }
 

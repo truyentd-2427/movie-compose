@@ -1,49 +1,44 @@
 package com.truyentd.moviecompose.presentation.screens.top.components
 
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.truyentd.moviecompose.navigation.top.TopDestination
+import com.truyentd.moviecompose.presentation.navigation.top.topRoutes
 
 @Composable
 fun AppBottomNavigation(navController: NavController) {
-    val bottomNavDestinations = listOf(
-        TopDestination.Home,
-        TopDestination.Search,
-        TopDestination.Bookmark,
-    )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    BottomNavigation(
-        modifier = Modifier.navigationBarsPadding(),
-        backgroundColor = Color.White,
-        elevation = 12.dp,
+    NavigationBar(
+        modifier = Modifier.navigationBarsPadding()
     ) {
-        bottomNavDestinations.forEach { screen ->
+        topRoutes.forEach { stack ->
             val selected =
-                currentDestination?.hierarchy?.any { it.route == screen.route } == true
-            BottomNavigationItem(
+                currentDestination?.hierarchy?.any { it.hasRoute(stack.route::class) } == true
+            NavigationBarItem(
                 icon = {
                     Icon(
-                        painter = painterResource(id = if (selected) screen.selectedIcon else screen.unselectedIcon),
+                        painter = painterResource(id = if (selected) stack.selectedIcon else stack.unselectedIcon),
                         contentDescription = null,
                         tint = Color.Unspecified
                     )
                 },
+                label = { Text(text = stack.label) },
                 selected = selected,
                 onClick = {
-                    navController.navigate(screen.route) {
+                    navController.navigate(stack.route) {
                         // Pop up to the start destination of the graph to
                         // avoid building up a large stack of destinations
                         // on the back stack as users select items
@@ -51,12 +46,12 @@ fun AppBottomNavigation(navController: NavController) {
                             saveState = true
                         }
                         // Avoid multiple copies of the same destination when
-                        // reselecting the same item
+                        // re-selecting the same item
                         launchSingleTop = true
-                        // Restore state when reselecting a previously selected item
+                        // Restore state when re-selecting a previously selected item
                         restoreState = true
                     }
-                }
+                },
             )
         }
     }

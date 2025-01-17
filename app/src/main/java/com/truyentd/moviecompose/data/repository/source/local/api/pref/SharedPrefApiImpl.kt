@@ -61,15 +61,19 @@ class SharedPrefApiImpl(context: Context, private val gson: Gson) : SharedPrefAp
             Boolean::class.java -> java.lang.Boolean.valueOf(
                 sharedPreferences.getBoolean(key, default as? Boolean ?: false),
             ) as? T
+
             Float::class.java -> java.lang.Float.valueOf(
                 sharedPreferences.getFloat(key, default as? Float ?: 0f),
             ) as? T
+
             Int::class.java -> Integer.valueOf(
                 sharedPreferences.getInt(key, default as? Int ?: 0),
             ) as? T
+
             Long::class.java -> java.lang.Long.valueOf(
                 sharedPreferences.getLong(key, default as? Long ?: 0L),
             ) as? T
+
             else -> gson.fromJson(sharedPreferences.getString(key, default as? String), type)
         }
     }
