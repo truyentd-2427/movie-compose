@@ -27,6 +27,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,10 +46,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.truyentd.moviecompose.R
 import com.truyentd.moviecompose.data.model.CastData
-import com.truyentd.moviecompose.navigation.BaseDestination
 import com.truyentd.moviecompose.presentation.components.LoadingBox
 import com.truyentd.moviecompose.presentation.components.SectionTitle
 import com.truyentd.moviecompose.presentation.dialog.AppErrorDialog
+import com.truyentd.moviecompose.presentation.navigation.BaseDestination
+import com.truyentd.moviecompose.presentation.navigation.NavigationType
 import com.truyentd.moviecompose.presentation.screens.moviedetail.components.CastItem
 import com.truyentd.moviecompose.presentation.screens.search.components.CategoryTag
 import com.truyentd.moviecompose.presentation.theme.AppColors
@@ -78,7 +80,7 @@ fun MovieDetailScreen(
     MovieDetailContent(
         uiState = uiState,
         isLoading = isLoading,
-        onBackClick = { navigator(BaseDestination.Up()) },
+        onBackClick = { navigator(NavigationType.NavigateUp()) },
         onBookmarkClick = { isBookmark ->
             if (isBookmark) viewModel.bookmarkMovie() else viewModel.unBookmarkMovie()
         },
@@ -114,18 +116,16 @@ private fun MovieDetailContent(
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                 )
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.TopStart)
-                        .offset(x = 24.dp, y = 48.dp)
-                        .clickable {
-                            onBackClick?.invoke()
-                        },
-                    contentDescription = null,
-                    tint = AppColors.White
-                )
+                IconButton(modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .offset(x = 16.dp, y = 36.dp), onClick = { onBackClick?.invoke() }) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        modifier = Modifier.size(24.dp),
+                        contentDescription = null,
+                        tint = AppColors.Black
+                    )
+                }
             }
             Column(
                 modifier = Modifier

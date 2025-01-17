@@ -39,9 +39,9 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.truyentd.moviecompose.R
 import com.truyentd.moviecompose.data.model.MovieData
-import com.truyentd.moviecompose.navigation.BaseDestination
 import com.truyentd.moviecompose.presentation.components.LoadingBox
 import com.truyentd.moviecompose.presentation.dialog.AppErrorDialog
+import com.truyentd.moviecompose.presentation.navigation.BaseDestination
 import com.truyentd.moviecompose.presentation.screens.search.components.SearchMovieItem
 import com.truyentd.moviecompose.presentation.theme.AppColors
 import com.truyentd.moviecompose.shared.extension.collectAsEffect

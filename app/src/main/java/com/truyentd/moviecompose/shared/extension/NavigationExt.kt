@@ -12,48 +12,45 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
-import androidx.navigation.navOptions
-import com.truyentd.moviecompose.navigation.BaseDestination
+import com.truyentd.moviecompose.presentation.navigation.AppRoute
+import com.truyentd.moviecompose.presentation.navigation.BaseDestination
+import com.truyentd.moviecompose.presentation.navigation.NavigationType
 
-fun NavGraphBuilder.composable(
-    destination: BaseDestination,
-    enterTransition: (@JvmSuppressWildcards
+inline fun <reified T : BaseDestination> NavGraphBuilder.composableX(
+    deepLinks: List<String> = emptyList(),
+    noinline enterTransition: (@JvmSuppressWildcards
     AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? = {
         slideIntoContainer(
             AnimatedContentTransitionScope.SlideDirection.Start,
             tween(300)
         )
     },
-    exitTransition: (@JvmSuppressWildcards
+    noinline exitTransition: (@JvmSuppressWildcards
     AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? = {
         slideOutOfContainer(
             AnimatedContentTransitionScope.SlideDirection.Start,
             tween(300)
         )
     },
-    popEnterTransition: (@JvmSuppressWildcards
+    noinline popEnterTransition: (@JvmSuppressWildcards
     AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? = {
         slideIntoContainer(
             AnimatedContentTransitionScope.SlideDirection.End,
             tween(300)
         )
     },
-    popExitTransition: (@JvmSuppressWildcards
+    noinline popExitTransition: (@JvmSuppressWildcards
     AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? = {
         slideOutOfContainer(
             AnimatedContentTransitionScope.SlideDirection.End,
             tween(300)
         )
     },
-    content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
+    noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
-    composable(
-        route = destination.route,
-        arguments = destination.arguments,
-        deepLinks = destination.deepLinks.map {
-            navDeepLink {
-                uriPattern = it
-            }
+    composable<T>(
+        deepLinks = deepLinks.map {
+            navDeepLink { uriPattern = it }
         },
         enterTransition = enterTransition,
         exitTransition = exitTransition,
@@ -64,41 +61,40 @@ fun NavGraphBuilder.composable(
 }
 
 /**
- * Navigate to provided [BaseDestination] with a Pair of key value String and Data [parcel]
+ * Navigate to provided [BaseDestination].
  * Caution to use this method. This method use savedStateHandle to store the Parcelable data.
  * When previousBackstackEntry is popped out from navigation stack, savedStateHandle will return null and cannot retrieve data.
  * eg.Login -> Home, the Login screen will be popped from the back-stack on logging in successfully.
  */
-fun NavHostController.navigate(
+fun NavHostController.navigateX(
     destination: BaseDestination,
-    parcel: Pair<String, Any?>? = null,
-    builder: (NavOptionsBuilder.() -> Unit)? = null,
+    navOptions: (NavOptionsBuilder.() -> Unit)? = null,
 ) {
     when (destination) {
-        is BaseDestination.Up -> {
-            destination.results.forEach { (key, value) ->
+        is NavigationType.NavigateUp -> {
+            destination.results?.forEach { (key, value) ->
                 previousBackStackEntry?.savedStateHandle?.set(key, value)
             }
             navigateUp()
         }
 
-        is BaseDestination.PopBackStack -> {
-            destination.results.forEach { (key, value) ->
-                getBackStackEntry(destination.targetDestination.route).savedStateHandle[key] = value
+        is NavigationType.PopBackStack<*> -> {
+            destination.results?.forEach { (key, value) ->
+                getBackStackEntry(destination).savedStateHandle[key] = value
             }
-            popBackStack(destination.targetDestination.route, inclusive = destination.inclusive)
+            popBackStack(
+                route = destination,
+                inclusive = destination.inclusive,
+                saveState = destination.saveState,
+            )
         }
 
-        else -> {
-            parcel?.let { (key, value) ->
-                currentBackStackEntry?.savedStateHandle?.set(key, value)
-            }
-            if (builder != null) {
-                navigate(destination.destination, navOptions(builder))
+        is AppRoute -> {
+            if (navOptions != null) {
+                navigate(destination, androidx.navigation.navOptions(navOptions))
             } else {
-                navigate(destination.destination)
+                navigate(destination)
             }
         }
     }
 }
-

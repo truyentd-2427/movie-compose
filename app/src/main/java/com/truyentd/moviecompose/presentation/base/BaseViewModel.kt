@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.truyentd.moviecompose.domain.interactor.input.BaseInput
 import com.truyentd.moviecompose.domain.usecase.base.AsyncNoInputUseCase
 import com.truyentd.moviecompose.domain.usecase.base.AsyncUseCase
-import com.truyentd.moviecompose.navigation.BaseDestination
+import com.truyentd.moviecompose.presentation.navigation.BaseDestination
 import com.truyentd.moviecompose.presentation.state.ErrorState
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job

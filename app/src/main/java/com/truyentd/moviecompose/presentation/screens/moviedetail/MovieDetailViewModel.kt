@@ -1,13 +1,14 @@
 package com.truyentd.moviecompose.presentation.screens.moviedetail
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.toRoute
 import com.truyentd.moviecompose.domain.usecase.movie.BookmarkMovieUseCase
 import com.truyentd.moviecompose.domain.usecase.movie.DeleteBookmarkMovieUseCase
 import com.truyentd.moviecompose.domain.usecase.movie.GetMovieCreditsUseCase
 import com.truyentd.moviecompose.domain.usecase.movie.GetMovieDetailUseCase
 import com.truyentd.moviecompose.domain.usecase.movie.HasBookmarkMovieUseCase
 import com.truyentd.moviecompose.presentation.base.BaseViewModel
-import com.truyentd.moviecompose.shared.constant.KEY_MOVIE_ID
+import com.truyentd.moviecompose.presentation.navigation.AppRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +24,8 @@ class MovieDetailViewModel @Inject constructor(
     private val bookmarkMovieUseCase: BookmarkMovieUseCase,
     private val deleteBookmarkMovieUseCase: DeleteBookmarkMovieUseCase,
 ) : BaseViewModel() {
-    private val movieId: String = checkNotNull(savedStateHandle[KEY_MOVIE_ID])
+    private val movieId: Int =
+        checkNotNull(savedStateHandle.toRoute<AppRoute.MovieDetail>().movieId)
 
     private val _uiState = MutableStateFlow(MovieDetailUiState())
     val uiState = _uiState.asStateFlow()
@@ -48,7 +50,7 @@ class MovieDetailViewModel @Inject constructor(
     fun unBookmarkMovie() {
         launchUseCase(
             deleteBookmarkMovieUseCase,
-            DeleteBookmarkMovieUseCase.Input(movieId.toInt()),
+            DeleteBookmarkMovieUseCase.Input(movieId),
             showLoading = false,
         ) {
             _uiState.update { it.copy(hasBookmark = false) }
@@ -58,7 +60,7 @@ class MovieDetailViewModel @Inject constructor(
     private fun hasBookmarkMovie() {
         launchUseCase(
             hasBookmarkMovieUseCase,
-            HasBookmarkMovieUseCase.Input(movieId.toInt()),
+            HasBookmarkMovieUseCase.Input(movieId),
         ) { hasBookmark ->
             _uiState.update { it.copy(hasBookmark = hasBookmark) }
         }
@@ -67,7 +69,7 @@ class MovieDetailViewModel @Inject constructor(
     private fun getMovieDetail() {
         launchUseCase(
             getMovieDetailUseCase,
-            GetMovieDetailUseCase.Input(movieId = movieId.toInt()),
+            GetMovieDetailUseCase.Input(movieId = movieId),
         ) { movie ->
             _uiState.update { it.copy(movie = movie) }
         }

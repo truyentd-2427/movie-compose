@@ -9,8 +9,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
-import com.truyentd.moviecompose.navigation.AppNavHost
-import com.truyentd.moviecompose.presentation.dialog.AppErrorDialog
+import com.truyentd.moviecompose.presentation.navigation.AppNavHost
 import com.truyentd.moviecompose.presentation.theme.MovieComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 

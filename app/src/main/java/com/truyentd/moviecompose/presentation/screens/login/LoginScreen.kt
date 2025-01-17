@@ -20,7 +20,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,16 +30,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.truyentd.moviecompose.R
-import com.truyentd.moviecompose.navigation.AppNavGraph
-import com.truyentd.moviecompose.navigation.BaseDestination
 import com.truyentd.moviecompose.presentation.components.LoadingBox
 import com.truyentd.moviecompose.presentation.components.textfield.AppTextField
 import com.truyentd.moviecompose.presentation.components.textfield.InputWrapper
 import com.truyentd.moviecompose.presentation.components.textfield.PasswordTextField
+import com.truyentd.moviecompose.presentation.navigation.BaseDestination
 import com.truyentd.moviecompose.presentation.theme.AppColors
 import com.truyentd.moviecompose.presentation.theme.AppTheme
 import com.truyentd.moviecompose.shared.extension.collectAsEffect
-import kotlinx.coroutines.flow.collectLatest
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
